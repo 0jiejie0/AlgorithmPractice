@@ -5,7 +5,7 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        while (scanner.hasNext()) {//保证输入结束时正常退出（防止）
+        while (scanner.hasNext()) {//保证输入结束时正常退出（防止被oj环境强退造成异常退出）
             System.out.println(AddAAndB.inputAndAdd(scanner));
         }
     }
