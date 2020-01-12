@@ -1,9 +1,5 @@
 package main.leetcode_20200108;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
 public class Solution {
     public int countCharacters(String[] words, String chars) {
         return new SpellWord().countCharacters(words, chars);
@@ -36,14 +32,14 @@ public class Solution {
  * 路径过程优化
  * 1、单词转换map时即判断 当前字符种类包含在字典中
  * 1、单词转换map时即判断 单词当前字符种类的数量不大于字典的
- * 优化三：
+ * 优化三：20ms38MB
  * 1、转化时将用到的量存入变量，减少嵌套多次调用转化时间
  * 2、string->map转换时计算总acsII码计数，单词一定小于字典
  * （这是上界，但不是上确界，与单词字母数量相关的下界有待确定，上下界的计算应该会消耗一定性能，
  * 算法模型大概描述为在给定的数字序列（可能含有重复数字）中求给定数量的数字最小和与最大和，
  * 模型变种1：已知给定数量的数字中含有若干数字（各异，给定的数字各不相同），从序列中求最小和与最大和
  * 模型变种2：已知给定数量的数字中含有若干数字（给定的数字中可能存在相同数字），从序列中求最小和与最大和）
- * 优化四：
+ * 优化四：6ms38MB
  * 1、将map改为一维数组，长度26
  * 优化五：
  * 1、关于优化三-2的模型，采用计数排序对序列进行排序（在优化四中已经实现），求k个数字的最大最小和时从头或尾部取k个数字即可
@@ -55,7 +51,7 @@ class SpellWord {
     private String dictString = null;
     private String[] words = null;
     //    字典map
-    private Map<Character, Integer> dictMap = null;
+    private Map dictMap = null;
     //    字典中的字符种类数
     private int dictCharKinds = 0;
     private int dictCodeValue = 0;
@@ -85,27 +81,13 @@ class SpellWord {
     }
 
     /**
-     * 将字母添加到map中
-     *
-     * @param map
-     * @param character
-     */
-    private void countAdd(Map<Character, Integer> map, Character character) {
-        Integer integer = 1;//字母数默认加一
-        if (map.containsKey(character)) {//map中已有该字母，数量累加
-            integer = integer + map.get(character);
-        }
-        map.put(character, integer);
-    }
-
-    /**
      * 将一个单词转化为一个map对象，包含单词中所有字母及相应个数
      *
      * @param word
      * @return 返回map对象表示单词可能被掌握，返回null表示单词不会被掌握
      */
-    private Map<Character, Integer> convert(String word) {
-        Map<Character, Integer> map = new HashMap<>();
+    private Map convert(String word) {
+        Map map = new Map();
         int codeValue = 0;
         for (char c : word.toCharArray()) {
 //            ascII计数
@@ -120,10 +102,10 @@ class SpellWord {
                     return null;
                 }
             }
-            countAdd(map, c);
+            map.add(c);
         }
         if (dictMap == null) {
-            dictCharKinds = map.keySet().size();
+            dictCharKinds = map.getKeyKinds();
             dictCodeValue = codeValue;
         }
         return map;
@@ -135,19 +117,18 @@ class SpellWord {
      * @param word
      * @return
      */
-    private int judgeAndCount(Map<Character, Integer> word) {
+    private int judgeAndCount(Map word) {
         if (word == null || word.size() == 0) {
             return 0;
         }
-        Set<Character> set = word.keySet();
-        if (set.size() > dictCharKinds) {//边界优化：单词字符类数多于字典，不合条件
+        if (word.getKeyKinds() > dictCharKinds) {//边界优化：单词字符类数多于字典，不合条件
             return 0;
         }
         int count = 0;
-        for (Character c : set) {
+        for (char c = 'a'; c <= 'z'; c++) {
+//            字母【词】∈字母【字典】(单词转换时已经判断) 且 单字母计数 词<=字典
             int n = word.get(c);
-//            字母【词】∈字母【字典】且 单字母计数 词<=字典
-            if (dictMap.containsKey(c) && dictMap.get(c) >= n) {
+            if (dictMap.get(c) >= n) {
                 count += n;
             } else {
                 return 0;
@@ -161,5 +142,43 @@ class SpellWord {
             return 0;
         }
         return judgeAndCount(convert(word));
+    }
+
+    private class Map {
+        private int[] data = new int[26];
+
+        public Integer get(char c) {
+            return data[c - 'a'];
+        }
+
+        public boolean containsKey(char c) {
+            return get(c) > 0;
+        }
+
+        public int size() {
+            return data.length;
+        }
+
+        public int[] getArr() {
+            return data;
+        }
+
+        public void put(char k, int v) {
+            data[k - 'a'] = v;
+        }
+
+        public void add(char k) {
+            data[k - 'a']++;
+        }
+
+        public int getKeyKinds() {
+            int res = 0;
+            for (int v : data) {
+                if (v > 0) {
+                    res++;
+                }
+            }
+            return res;
+        }
     }
 }
