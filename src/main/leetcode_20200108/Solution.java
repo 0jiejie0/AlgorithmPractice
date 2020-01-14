@@ -1,6 +1,6 @@
 package main.leetcode_20200108;
 
-import java.util.HashMap;
+//import java.util.HashMap;
 
 public class Solution {
     public int countCharacters(String[] words, String chars) {
@@ -55,7 +55,7 @@ class SpellWord {
     //    字典map
     private Map dictMap = null;
     //    存储排好序的字符数组
-    private char[] dictCharsSorted = null;
+//    private char[] dictCharsSorted = null;
     //    字典中的字符种类数
     private int dictCharKinds = 0;
     private int dictCodeValue = 0;
@@ -73,7 +73,7 @@ class SpellWord {
         this.words = words;
         this.dictString = chars;
         this.dictMap = null;
-        this.dictCharsSorted = null;
+//        this.dictCharsSorted = null;
         this.dictCharKinds = 0;
         this.dictCodeValue = 0;
 //        字典转化为map
@@ -94,12 +94,16 @@ class SpellWord {
     private Map convert(String word) {
         Map map = new Map();
         int codeValue = 0;
-        int current = 0;//当前位于字符数组中的位置
+//        int current = 0;//当前位于字符数组中的位置
         for (char c : word.toCharArray()) {
 //            ascII计数
             codeValue += c;
-            current++;
+//            current++;
             if (dictMap != null) {//单词转化为map时（字典转化时dictMap为null）
+                //                判断ascII上界
+                if (codeValue > dictCodeValue) {
+                    return null;
+                }
 //                检查字典 不含该字母或字母个数少于单词 说明该单词不能掌握
                 if (!dictMap.containsKey(c) || dictMap.get(c).equals(map.get(c))) {
                     return null;
@@ -110,20 +114,18 @@ class SpellWord {
         if (dictMap == null) {//字典转化map时
             dictCharKinds = map.getKeyKinds();
             dictCodeValue = codeValue;
-            dictCharsSorted = new char[current];
-            current = 0;
-            for (char c = 'a'; c <= 'z'; c++) {
-                int count = map.get(c);
-                current += count;
-                for (int i = current - count; i < current; i++) {
-                    dictCharsSorted[i] = c;
-                }
-            }
-        } else {
+//            dictCharsSorted = new char[current];
+//            current = 0;
+//            for (char c = 'a'; c <= 'z'; c++) {
+//                int count = map.get(c);
+//                current += count;
+//                for (int i = current - count; i < current; i++) {
+//                    dictCharsSorted[i] = c;
+//                }
+//            }
+//        } else {
             //                判断ascII上下界
-            if (codeValue < dictMap.getMin(current) || codeValue > dictMap.getMax(current)) {
-                return null;
-            }
+//            if (codeValue < dictMap.getMin(current) || codeValue > dictMap.getMax(current)) {
         }
         return map;
     }
@@ -163,8 +165,8 @@ class SpellWord {
 
     private class Map {
         private int[] data = new int[26];
-        private java.util.Map<Integer, Integer> maxMap = new HashMap<>();
-        private java.util.Map<Integer, Integer> minMap = new HashMap<>();
+//        private java.util.Map<Integer, Integer> maxMap = new HashMap<>();
+//        private java.util.Map<Integer, Integer> minMap = new HashMap<>();
 
         /**
          * 获取字符c的个数
@@ -176,79 +178,80 @@ class SpellWord {
             return data[c - 'a'];
         }
 
-        /**
-         * 获取指定字符跟向要求的最大个数
-         *
-         * @param c
-         * @param count 要求数
-         * @return 当count大于c个数返回c个数，否则返回count数
-         */
-        public Integer get(char c, int count) {
-            int n = get(c);
-            return n < count ? n : count;
-        }
+//        /**
+//         * 获取指定字符跟向要求的最大个数
+//         *
+//         * @param c
+//         * @param count 要求数
+//         * @return 当count大于c个数返回c个数，否则返回count数
+//         */
+//        public Integer get(char c, int count) {
+//            int n = get(c);
+//            return n < count ? n : count;
+//        }
 
-        /**
-         * 计算字典中取得指定数目的字符时，字符累积的最小ascII码数
-         *
-         * @param count
-         * @return asc最小和
-         */
-        public Integer getMin(Integer count) {
-            if (count == 1) {
-                return (int) dictCharsSorted[0];
-            }
-            Integer record = minMap.get(count);
-            if (record != null) {
-                return record;
-            }
-            int length = dictCharsSorted.length;
-            int sum = dictCharsSorted[count - 1], n = count;
-            if (minMap.size() > 6 || count < 9) {//数据规模小或者map中存在少量已知数值时，递归求解
-                sum += getMin(count - 1);
-            } else {//数据规模大且map中已知数值不足量，一次性求解，减少等待时间
-                count--;
-                for (char c = 'a'; count != 0; c++) {
-                    int m = get(c, count);
-                    sum += (c * m);
-                    count -= m;
-                }
-            }
-            minMap.put(n, sum);
-            maxMap.put(length - n, dictCodeValue - sum);
-            return sum;
-        }
+//        /**
+//         * 计算字典中取得指定数目的字符时，字符累积的最小ascII码数
+//         *
+//         * @param count
+//         * @return asc最小和
+//         */
+//        public Integer getMin(Integer count) {
+//            if (count == 1) {
+//                return (int) dictCharsSorted[0];
+//            }
+//            Integer record = minMap.get(count);
+//            if (record != null) {
+//                return record;
+//            }
+//            int length = dictCharsSorted.length;
+//            int sum = dictCharsSorted[count - 1], n = count;
+//            if (minMap.size() > 6 || count < 9) {//数据规模小或者map中存在少量已知数值时，递归求解
+//                sum += getMin(count - 1);
+//            } else {//数据规模大且map中已知数值不足量，一次性求解，减少等待时间
+//                count--;
+//                for (char c = 'a'; count != 0; c++) {
+//                    int m = get(c, count);
+//                    sum += (c * m);
+//                    count -= m;
+//                }
+//            }
+//            minMap.put(n, sum);
+//            maxMap.put(length - n, dictCodeValue - sum);
+//            return sum;
+//        }
 
-        /**
-         * 计算字典中取得指定数目的字符时，字符累积的最大ascII码数
-         *
-         * @param count
-         * @return asc最大和
-         */
-        public Integer getMax(Integer count) {
-            if (count == 1) {
-                return (int) dictCharsSorted[dictCharsSorted.length - 1];
-            }
-            Integer record = maxMap.get(count);
-            if (record != null) {
-                return record;
-            }
-            int length = dictCharsSorted.length;
-            int sum = dictCharsSorted[length - count], n = count;
-            if (maxMap.size() > 6 || count < 9) {
-                sum += getMax(count - 1);//数据规模小或者map中存在少量已知数值时，递归求解
-            } else {//数据规模大且map中已知数值不足量，一次性求解，减少等待时间
-                count--;
-                for (char c = 'z'; count != 0; c--) {
-                    int m = get(c, count);
-                    sum += (c * m);
-                    count -= m;
-                }
-            }
-            maxMap.put(n, sum);
-            minMap.put(length - n, dictCodeValue - sum);
-            return sum;
-        }
+//        /**
+//         * 计算字典中取得指定数目的字符时，字符累积的最大ascII码数
+//         * <p>
+//         * //         * @param count
+//         *
+//         * @return asc最大和
+//         */
+//        public Integer getMax(Integer count) {
+//            if (count == 1) {
+//                return (int) dictCharsSorted[dictCharsSorted.length - 1];
+//            }
+//            Integer record = maxMap.get(count);
+//            if (record != null) {
+//                return record;
+//            }
+//            int length = dictCharsSorted.length;
+//            int sum = dictCharsSorted[length - count], n = count;
+//            if (maxMap.size() > 6 || count < 9) {
+//                sum += getMax(count - 1);//数据规模小或者map中存在少量已知数值时，递归求解
+//            } else {//数据规模大且map中已知数值不足量，一次性求解，减少等待时间
+//                count--;
+//                for (char c = 'z'; count != 0; c--) {
+//                    int m = get(c, count);
+//                    sum += (c * m);
+//                    count -= m;
+//                }
+//            }
+//            maxMap.put(n, sum);
+//            minMap.put(length - n, dictCodeValue - sum);
+//            return sum;
+//        }
 
         public boolean containsKey(char c) {
             return get(c) > 0;
@@ -258,13 +261,13 @@ class SpellWord {
             return data.length;
         }
 
-        public int[] getArr() {
-            return data;
-        }
+//        public int[] getArr() {
+//            return data;
+//        }
 
-        public void put(char k, int v) {
-            data[k - 'a'] = v;
-        }
+//        public void put(char k, int v) {
+//            data[k - 'a'] = v;
+//        }
 
         public void add(char k) {
             data[k - 'a']++;
