@@ -27,7 +27,7 @@ public class Solution {
      * 1、在全长范围内找到最长子数组（仅限定偶数个元素，不限定01等量）的和以及长度
      * 2、依次检查定长子数组，根据出入数组元素调整当前数组和
      * 3、子数组和为0，符合条件，返回；否则不符合条件，继续检查下一个数组
-     * 4、当前长度子数组检查不合条件，将长度缩短，继续搜索
+     * 4、当前长度的所有子数组检查均不合条件，将长度缩短，继续搜索
      * 优化一：
      * 1、当前范围的01差量限制了最长子数组长度<=当前范围长度-差量
      *
@@ -37,22 +37,59 @@ public class Solution {
     public int findMaxLength(int[] nums) {
         int maxLength = 0;
         int maxSum = 0;
-        int nowSum;
+//        int nowSum;
         for (int i = 0; i < nums.length; i++) {
             if (nums[i] == 0) {
                 nums[i] = -1;
             }
+            maxSum += nums[i];
         }
-        for (int start = 0; start < nums.length - 1; start++) {
-            nowSum = 0;
-            for (int end = start + 1; end < nums.length; end += 2) {
-                nowSum += nums[end - 1];
-                nowSum += nums[end];
-                if (nowSum == 0 && ((end - start + 1) > maxLength)) {
-                    maxLength = end - start + 1;
-                }
+        int length = nums.length;
+        if (length % 2 == 0) {
+            maxLength = findMaxLength(nums, maxSum, length);
+        } else {
+            length--;
+            maxLength = findMaxLength(nums, maxSum - nums[length], length);
+        }
+//        for (int start = 0; start < nums.length - 1; start++) {
+//            nowSum = 0;
+//            for (int end = start + 1; end < nums.length; end += 2) {
+//                nowSum += nums[end - 1];
+//                nowSum += nums[end];
+//                if (nowSum == 0 && ((end - start + 1) > maxLength)) {
+//                    maxLength = end - start + 1;
+//                }
+//            }
+//        }
+        return maxLength;
+    }
+
+    /**
+     * 在定长范围内寻找最长01同量的子数组
+     *
+     * @param nums   经过转化的数组
+     * @param sum    指定长度的和
+     * @param length 指定长度，且为偶数
+     * @return 最长子数组的长度
+     */
+    private int findMaxLength(int[] nums, int sum, int length) {
+        int tempSum = sum;
+        int range = nums.length - length + 1;
+        for (int i = 0; i < range; i++) {
+            if (tempSum == 0) {//依次检查指定长度子数组的和，和为0表示原数组01等量
+                return length;
+            }
+            //继续向后检查
+            tempSum -= nums[i];
+            try {
+                tempSum += nums[i + length];
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
-        return maxLength;
+//        当前长度的所有子数组都不能满足条件，缩短长度继续寻找
+        sum -= nums[length - 1];
+        sum -= nums[length - 2];
+        return findMaxLength(nums, sum, length - 2);
     }
 }
