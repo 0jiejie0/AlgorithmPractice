@@ -1,5 +1,8 @@
 package main.leetcode_20200117;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Solution {
     /**
      * 525. 连续数组
@@ -36,69 +39,27 @@ public class Solution {
      */
     public int findMaxLength(int[] nums) {
         int maxLength = 0;
-        int maxSum = 0;
-//        int nowSum;
+        int sum = 0;
+//        好吧，看了官方题解，如梦初醒,跟着思路实现一下吧[38ms]
+        Map<Integer, Integer> map = new HashMap<>();
         for (int i = 0; i < nums.length; i++) {
-            if (nums[i] == 0) {
-                nums[i] = -1;
+            sum += nums[i] == 0 ? -1 : 1;
+            if (map.containsKey(sum)) {
+                int newLength = (i - map.get(sum));
+                if (maxLength < newLength) {
+                    maxLength = newLength;
+                }
+            } else {
+                if (sum == 0) {
+                    int newLength = i + 1;
+                    if (maxLength < newLength) {
+                        maxLength = newLength;
+                    }
+                } else {
+                    map.put(sum, i);
+                }
             }
-            maxSum += nums[i];
         }
-        int length = nums.length;
-        if (maxSum > 0) {//优化一，maxSum绝对值代表了01量差，从length中去除这一部分
-            length -= maxSum;
-        } else {
-            length += maxSum;
-        }
-        for (int i = length; i < nums.length; i++) {
-            maxSum -= nums[i];//从总和中去除多余部分的值
-        }
-        maxLength = findMaxLength(nums, maxSum, length);
-//        if (length % 2 == 0) {
-//            maxLength = findMaxLength(nums, maxSum, length);
-//        } else {
-//            length--;
-//            maxLength = findMaxLength(nums, maxSum - nums[length], length);
-//        }
-//        for (int start = 0; start < nums.length - 1; start++) {
-//            nowSum = 0;
-//            for (int end = start + 1; end < nums.length; end += 2) {
-//                nowSum += nums[end - 1];
-//                nowSum += nums[end];
-//                if (nowSum == 0 && ((end - start + 1) > maxLength)) {
-//                    maxLength = end - start + 1;
-//                }
-//            }
-//        }
         return maxLength;
-    }
-
-    /**
-     * 在定长范围内寻找最长01同量的子数组
-     *
-     * @param nums   经过转化的数组
-     * @param sum    指定长度的和
-     * @param length 指定长度，且为偶数
-     * @return 最长子数组的长度
-     */
-    private int findMaxLength(int[] nums, int sum, int length) {
-        int tempSum = sum;
-        int range = nums.length - length + 1;
-        for (int i = 0; i < range; i++) {
-            if (tempSum == 0) {//依次检查指定长度子数组的和，和为0表示原数组01等量
-                return length;
-            }
-            //继续向后检查
-            tempSum -= nums[i];
-            try {
-                tempSum += nums[i + length];
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-//        当前长度的所有子数组都不能满足条件，缩短长度继续寻找
-        sum -= nums[length - 1];
-        sum -= nums[length - 2];
-        return findMaxLength(nums, sum, length - 2);
     }
 }
