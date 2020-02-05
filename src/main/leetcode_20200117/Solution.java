@@ -40,24 +40,26 @@ public class Solution {
     public int findMaxLength(int[] nums) {
         int maxLength = 0;
         int sum = 0;
-//        好吧，看了官方题解，如梦初醒,跟着思路实现一下吧[38ms]
-        Map<Integer, Integer> map = new HashMap<>();
+//        好吧，看了官方题解，如梦初醒,跟着思路实现一下吧[6ms]
+        int origin = nums.length;
+        int[] sums = new int[origin * 2 + 1];
+        for (int i = 0; i < sums.length; i++) {
+            sums[i] = -1;
+        }
         for (int i = 0; i < nums.length; i++) {
             sum += nums[i] == 0 ? -1 : 1;
-            if (map.containsKey(sum)) {
-                int newLength = (i - map.get(sum));
-                if (maxLength < newLength) {
-                    maxLength = newLength;
+            int newLength = 0;
+            if (sums[sum + origin] == -1) {
+                if (sum == 0) {
+                    newLength = i + 1;
+                } else {
+                    sums[sum + origin] = i;
                 }
             } else {
-                if (sum == 0) {
-                    int newLength = i + 1;
-                    if (maxLength < newLength) {
-                        maxLength = newLength;
-                    }
-                } else {
-                    map.put(sum, i);
-                }
+                newLength = i - sums[sum + origin];
+            }
+            if (newLength > maxLength) {
+                maxLength = newLength;
             }
         }
         return maxLength;
