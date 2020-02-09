@@ -5,7 +5,40 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        DistanceBetweenTwoPoints.figure(new Scanner(System.in));
+//        DistanceBetweenTwoPoints.figure(new Scanner(System.in));
+        VolumeOfBall.figure(new Scanner(System.in));
+    }
+}
+
+/**
+ * Problem Description
+ * 根据输入的半径值，计算球的体积。
+ * <p>
+ * Input
+ * 输入数据有多组，每组占一行，每行包括一个实数，表示球的半径。
+ * Output
+ * 输出对应的球的体积，对于每组输入数据，输出一行，计算结果保留三位小数。
+ * <p>
+ * Sample Input
+ * 1
+ * 1.5
+ * Sample Output
+ * 4.189
+ * 14.137
+ * <p>
+ * Time Limit: 2000/1000 MS (Java/Others)    Memory Limit: 65536/32768 K (Java/Others)
+ * Total Submission(s): 268685    Accepted Submission(s): 104228
+ * <p>
+ * Wrong Answer
+ */
+class VolumeOfBall {
+    public static final double PI = 3.1415927;
+
+    public static final void figure(Scanner input) {
+        while (input.hasNext()) {
+            double r = input.nextDouble();
+            System.out.println(DistanceBetweenTwoPoints.format((PI * Math.pow(r, 3) * 4.0) / 3, 3));
+        }
     }
 }
 
