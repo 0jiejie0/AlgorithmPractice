@@ -6,7 +6,8 @@ public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         while (scanner.hasNext()) {
-            NumStatis.put(scanner);
+            if (NumStatis.put(scanner) == 1)
+                break;
         }
     }
 }
@@ -15,6 +16,7 @@ public class Main {
  * 数值统计
  * Time Limit: 2000/1000 MS (Java/Others)    Memory Limit: 65536/32768 K (Java/Others)
  * Total Submission(s): 174930    Accepted Submission(s): 82202
+ * 32466404	2020-02-13 00:18:59	Accepted	2008	296MS	9624K	1452 B	Java	解孔明
  * Problem Description
  * 统计给定的n个数中，负数、零和正数的个数。
  * <p>
@@ -32,8 +34,8 @@ public class Main {
  * 0 0 5
  */
 class NumStatis {
-    public static final void put(Scanner input) {
-        double n = input.nextDouble();
+    public static final int put(Scanner input) {
+        int n = input.nextInt();
         int negative = 0;
         int zero = 0;
         for (int i = 0; i < n; i++) {
@@ -46,5 +48,9 @@ class NumStatis {
         }
         if (n > 0)
             System.out.println(negative + " " + zero + " " + (n - negative - zero));
+        else {
+            return 1;
+        }
+        return 0;
     }
 }
