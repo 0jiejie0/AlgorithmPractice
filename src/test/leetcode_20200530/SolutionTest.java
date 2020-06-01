@@ -18,9 +18,11 @@ public class SolutionTest {
 
     @Test
     public void twoSum() {
-//        Assert.assertEquals(new int[]{0, 1}.toString(), new Solution().twoSum(new int[]{2, 7, 11, 15}, 9).toString());
-//        Assert.assertEquals(new int[]{0, 1}.toString(), new Solution().twoSum(new int[]{3, 3}, 6).toString());
-        Assert.assertEquals(new int[]{0, 2}.toString(), new Solution().twoSum(new int[]{3, 2, 3}, 6).toString());
+        Assert.assertArrayEquals(new int[]{0, 1}, new Solution().twoSum(new int[]{2, 7, 11, 15}, 9));
+        Assert.assertArrayEquals(new int[]{0, 1}, new Solution().twoSum(new int[]{3, 3}, 6));
+        Assert.assertArrayEquals(new int[]{0, 2}, new Solution().twoSum(new int[]{3, 2, 3}, 6));
+        Assert.assertArrayEquals(new int[]{1, 2}, new Solution().twoSum(new int[]{3, 2, 4}, 6));
+        Assert.assertArrayEquals(new int[]{0, 3}, new Solution().twoSum(new int[]{0, 4, 3, 0}, 0));
     }
 
     @Test
