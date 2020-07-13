@@ -44,22 +44,25 @@ package main.problemAndSolving.leetcode_20200712WeekRankList;
 //1 <= s.length <= 10^5
 public class 仅含1的子串数 {
     public int numSub(String s) {
+        //换用BigInteger提交错误，好像这个leetcode不支持还是这题目不让用BigInteger？
         int length = 0;
         int res = 0;
         int mod = 1000 * 1000 * 1000 + 7;
         for (int i = 0; i < s.length(); i++) {
+            //好吧，是滑动窗口，是我愚钝了，只需要每次加一下长度就好
             if ('1' == s.charAt(i)) {
-                length++;
-            } else if (length > 0) {
-                res += ((length * (length + 1)) >> 1) % mod;
+                res += ++length;//每块连续只含1串（长度n）的含1子串数=1+2+3+……+n
                 res %= mod;
+            } else if (length > 0) {
+//                res += ((length * (length + 1)) >> 1) % mod;
+//                res %= mod;
                 length = 0;
             }
         }
-        if (length != 0) {
-            res += ((length * (length + 1)) >> 1) % mod;
-            res %= mod;
-        }
+//        if (length != 0) {
+//            res += ((length * (length + 1)) >> 1) % mod;
+//            res %= mod;
+//        }
         return res;
     }
 }

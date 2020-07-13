@@ -41,10 +41,8 @@ public class Solution {
         int end = haystack.length() - needle.length();//此时已经排除null、长度为零等异常情况
         for (int i = 0; i <= end; i++) {
             if (haystack.charAt(i) == needle.charAt(0)) {//找到可能的子串（每次needle从0号元素开始匹配）
-                for (length = needle.length() - 1; length > 0; length--) {//从可能区间内，从后往前匹配
-                    if (haystack.charAt(i + length) != needle.charAt(length)) {//匹配过程中出现相异字符，匹配失败
-                        break;
-                    }
+                for (length = needle.length() - 1; length > 0 && haystack.charAt(i + length) == needle.charAt(length); length--) {
+                    //从可能区间内，从后往前匹配。匹配过程中出现相异字符，匹配失败
                 }
                 if (length == 0) {
                     start = i;

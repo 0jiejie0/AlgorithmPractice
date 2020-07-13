@@ -37,13 +37,13 @@ package main.problemAndSolving.leetcode_20200712WeekRankList;
 public class 好数对 {
     public int numIdenticalPairs(int[] nums) {
         int[] arr = new int[101];
-        for (int i = 0; i < nums.length; i++) {
-            arr[nums[i]]++;
-        }
         int res = 0;
-        for (int i = 1; i < arr.length; i++) {
-            res+= (arr[i]*(arr[i]-1))>>1;
+        for (int i = 0; i < nums.length; i++) {
+            res += arr[nums[i]]++;//吸收下面一题（仅含1的子串数）的经验，同理改良
         }
+//        for (int i = 1; i < arr.length; i++) {
+//            res += (arr[i] * (arr[i] - 1)) >> 1;
+//        }
         return res;
     }
 }
