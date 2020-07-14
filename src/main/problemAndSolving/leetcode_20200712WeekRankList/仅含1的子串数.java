@@ -50,19 +50,21 @@ public class 仅含1的子串数 {
         int mod = 1000 * 1000 * 1000 + 7;
         for (int i = 0; i < s.length(); i++) {
             //好吧，是滑动窗口，是我愚钝了，只需要每次加一下长度就好
+            //好像这里用乘法算起来更节约计算资源，乘法只需要每一段最后大量计算一次，而累加的形式需要频繁计算很多次（推测是这样）
             if ('1' == s.charAt(i)) {
-                res += ++length;//每块连续只含1串（长度n）的含1子串数=1+2+3+……+n
-                res %= mod;
-            } else if (length > 0) {
-//                res += ((length * (length + 1)) >> 1) % mod;
+//                res += ++length;//每块连续只含1串（长度n）的含1子串数=1+2+3+……+n
 //                res %= mod;
+                length++;
+            } else if (length > 0) {
+                res += (((long) length * (length + 1)) >> 1) % mod;
+                res %= mod;
                 length = 0;
             }
         }
-//        if (length != 0) {
-//            res += ((length * (length + 1)) >> 1) % mod;
-//            res %= mod;
-//        }
+        if (length != 0) {
+            res += (((long) length * (length + 1)) >> 1) % mod;
+            res %= mod;
+        }
         return res;
     }
 }
