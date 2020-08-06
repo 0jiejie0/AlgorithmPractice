@@ -38,7 +38,7 @@ package main.problemAndSolving.leetcode_20200806;
 //本来想做两道题，看来是不行了，
 // 虽然标签提示用深搜，但是我想用宽搜用队列绕开递归，但是提交运行时报类型转换异常，看样子进队元素需要是Comparable子类
 //java.lang.ClassCastException: class TreeNode cannot be cast to class java.lang.Comparable (TreeNode is in unnamed module of loader 'app'; java.lang.Comparable is in module java.base of loader 'bootstrap')
-//换到栈改用深搜，想尝试递推解决深搜问题，考虑到最后发现需要处理的情况很多，尤其是所有结点的值相同的情况无法实现，且简单分析发现此法不如递归简洁高效，
+//换到栈改用深搜，想尝试递推解决深搜问题，考虑到最后发现需要处理的情况很多，尤其是所有结点的值相同的情况，条件复杂，简单分析发现此法不如递归简洁高效，
 // 最后改用递归解决
 // 用时88m
 //执行耗时:0 ms,击败了100.00% 的Java用户
