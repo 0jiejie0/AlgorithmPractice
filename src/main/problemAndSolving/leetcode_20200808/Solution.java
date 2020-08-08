@@ -114,9 +114,48 @@ public class Solution {
 // 返回它的最小深度 2. 
 // Related Topics 树 深度优先搜索 广度优先搜索
 // 总得来说比较简单，但是因为搞错了概念弄成了从根节点到单支结点的深度，题目要求是到叶子节点，叶子节点没有子节点，用时15m
+// 再试一下宽搜，貌似宽搜在不满树里的复杂度要优于深搜
 // 执行耗时:0 ms,击败了100.00% 的Java用户
 //		内存消耗:40 MB,击败了23.51% 的Java用户
+
+    //执行耗时:0 ms,击败了100.00% 的Java用户
+    //		内存消耗:39.7 MB,击败了82.18% 的Java用户
+    //宽搜的内存消耗稍微低些，但是执行时间并不非常优于深搜，可能是代码优化度不够
     public int minDepth(TreeNode root) {
+        return minDepthWide(root);
+    }
+
+    private int minDepthWide(TreeNode root) {
+        int res = 0;
+        Queue<TreeNode> queue = new LinkedList<>();
+        Queue<TreeNode> queueTemp = new LinkedList<>();
+        Queue<TreeNode> queueTempSec;
+        TreeNode node;
+        if (root != null) {
+            ((LinkedList<TreeNode>) queue).add(root);
+        }
+        while (!queue.isEmpty()) {
+            while (!queue.isEmpty()) {
+                node = queue.poll();
+                if (node.left == node.right) {//出现叶子节点，得出结果
+                    return res + 1;
+                }
+                if (node.left != null) {
+                    ((LinkedList<TreeNode>) queueTemp).add(node.left);
+                }
+                if (node.right != null) {
+                    ((LinkedList<TreeNode>) queueTemp).add(node.right);
+                }
+            }
+            queueTempSec = queue;
+            queue = queueTemp;
+            queueTemp = queueTempSec;
+            res++;
+        }
+        return res;
+    }
+
+    private int minDepthDeep(TreeNode root) {
         if (root == null) {
             return 0;
         }
@@ -124,12 +163,12 @@ public class Solution {
             return 1;
         }
         if (root.right == null) {
-            return minDepth(root.left) + 1;
+            return minDepthDeep(root.left) + 1;
         } else if (root.left == null) {
-            return minDepth(root.right) + 1;
+            return minDepthDeep(root.right) + 1;
         }
-        int l = minDepth(root.left);
-        int r = minDepth(root.right);
+        int l = minDepthDeep(root.left);
+        int r = minDepthDeep(root.right);
         return (l < r ? l : r) + 1;
     }
 }
