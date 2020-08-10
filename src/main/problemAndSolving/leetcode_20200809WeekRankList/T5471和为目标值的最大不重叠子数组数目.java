@@ -1,5 +1,8 @@
 package main.problemAndSolving.leetcode_20200809WeekRankList;
 
+import java.util.HashSet;
+import java.util.Set;
+
 //给你一个数组 nums 和一个整数 target 。
 //
 //请你返回 非空不重叠 子数组的最大数目，且每个子数组中数字和都为 target 。
@@ -34,22 +37,39 @@ package main.problemAndSolving.leetcode_20200809WeekRankList;
 //0 <= target <= 10^6
 public class T5471和为目标值的最大不重叠子数组数目 {
     public int maxNonOverlapping(int[] nums, int target) {
-        int[] aux = new int[nums.length];
-        int tag = 0;//已找到的数组的下标
         int res = 0;
-        for (int i = 0; i + tag < nums.length; i++) {
-            for (int j = i + tag; j < nums.length; j++) {
-                if (aux[j] == target) {//找到一个数组，aux后续元素清零
-                    aux[j] = 0;
-                }
-                aux[j] += nums[i + tag];
-            }
-            if (aux[i + tag] == target) {//找到一个子数组，是从target到target+i
+        int sum = 0;
+        Set<Integer> set = new HashSet<>();//存放待寻找的sum值
+        set.add(target);
+        for (int i = 0; i < nums.length; i++) {
+            sum += nums[i];
+            if (set.contains(sum)) {
+                set.clear();//不相交,清除此前记录的值
+                sum = 0;//从下个位置重新计算
+                set.add(target);//单个数组元素满足target的情况
                 res++;
-                tag += i + 1;
-                i = -1;
+            } else {
+                set.add(target + sum);//<=== futureContainTargetSum-sum=target 不要误弄成作差
             }
         }
         return res;
+//        n^2复杂度即使结果正确也超时了，况且这段代码有bug，突然想到可以最后用辅助数组两两作差，即可得到，由此引发一个复杂度更低的想法，如上：
+//        int[] aux = new int[nums.length];
+//        int tag = 0;//已找到的数组的下标
+//        int res = 0;
+//        for (int i = 0; i + tag < nums.length; i++) {
+//            for (int j = i + tag; j < nums.length; j++) {
+//                if (aux[j] == target) {//找到一个数组，aux后续元素清零
+//                    aux[j] = 0;
+//                }
+//                aux[j] += nums[i + tag];
+//            }
+//            if (aux[i + tag] == target) {//找到一个子数组，是从target到target+i
+//                res++;
+//                tag += i + 1;
+//                i = -1;
+//            }
+//        }
+//        return res;
     }
 }
