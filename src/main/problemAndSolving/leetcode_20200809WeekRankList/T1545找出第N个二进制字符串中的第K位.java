@@ -51,10 +51,7 @@ public class T1545找出第N个二进制字符串中的第K位 {
             return '1';
         } else if (k < mid) {
             return findKthBit(n - 1, k);
-        } else {
-            k -= mid;
-            k = mid - k;
-            return findKthBit(n - 1, k) == '1' ? '0' : '1';
         }
+        return findKthBit(n - 1, (mid << 1) - k) == '1' ? '0' : '1';//k = mid - (k - mid)
     }
 }
