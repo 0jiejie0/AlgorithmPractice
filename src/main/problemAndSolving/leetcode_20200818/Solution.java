@@ -63,70 +63,33 @@ import java.util.HashSet;
 // 用hashset比较方便，但是性能表现很不理想，用时13m
 // 执行耗时:9 ms,击败了14.59% 的Java用户
 //		内存消耗:43.5 MB,击败了6.59% 的Java用户
+
+//负优化了，这一搞更废
+// 执行耗时:13 ms,击败了7.05% 的Java用户
+//		内存消耗:42.3 MB,击败了7.81% 的Java用户
 public class Solution {
     public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
-        ListNode tempA = null, tempB = null, p, res = null;
+        ListNode tempA = headA, tempB = headB, p, res = null;
         HashSet<ListNode> set = new HashSet<>();
-        while (headA != null && headB != null) {
-            p = headA;
-            headA = headB;
-            headB = p;
-            if (set.contains(headA)) {
-                res = headA;
-                break;
+        while (null != tempA && null != tempB) {//两个链表同步加入结点到set，同时探测是否出现过改点
+            p = tempA;//交替进行
+            tempA = tempB;
+            tempB = p;
+            if (set.contains(tempA)) {
+                return tempA;//在任一个链表遍历完一遍前找到，立即退出
             }
-            set.add(headA);
-            //调整访问部分的链表方向
-            p = headA;
-            headA = headA.next;
-            p.next = tempA;
-            tempA = p;
-        }
-        if (res == null) {//没找到交点可能是较短的链表遍历完了
-            ListNode head = headA == null ? headB : headA;
-            ListNode temp = headA == null ? tempB : tempA;
-            while (head != null) {
-                if (set.contains(head)) {
-                    res = head;
-                    break;
-                }
-                p = head;
-                head = head.next;
-                p.next = temp;
-                temp = p;
-            }
-        }
-        if (res != null) {//找到节点后，调整相交部分
-            if (res == headB) {//headB为交点，则将B一套指到到A上,将B定位到非交点，以待调整
-                headB = headA;
-                p = tempA;
-                tempA = tempB;
-                tempB = p;
-            }
-            while (tempB != res) {//整理从交点到链表尾的部分,调回原方向
-                p = tempB;
-                tempB = tempB.next;
-                p.next = headB;
-                headB = p;
-            }
-            //调整交点
-            tempB = tempB.next;
-            res.next = headB;
-            headA = headB = res;
-        }
-        //调整不相交部分
-        while (tempA != null) {
-            p = tempA;
+            set.add(tempA);//遍历时将每个结点放入hashSet中
             tempA = tempA.next;
-            p.next = headA;
-            headA = p;
         }
-        while (tempB != null) {
-            p = tempB;
-            tempB = tempB.next;
-            p.next = headB;
-            headB = p;
+        //遍历完一个链表仍然没有找到
+        tempA = tempA == null ? tempB : tempA;
+        while (tempA != null) {
+            if (set.contains(tempA)) {
+                return tempA;
+            }
+            //此时若相交，则相交点一定在set中，不必再添加
+            tempA = tempA.next;
         }
-        return res;
+        return null;
     }
 }
