@@ -64,20 +64,69 @@ import java.util.HashSet;
 // 执行耗时:9 ms,击败了14.59% 的Java用户
 //		内存消耗:43.5 MB,击败了6.59% 的Java用户
 public class Solution {
-        public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
-        ListNode p = headA;
+    public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+        ListNode tempA = null, tempB = null, p, res = null;
         HashSet<ListNode> set = new HashSet<>();
-        while (p != null) {
-            set.add(p);
-            p = p.next;
-        }
-        p = headB;
-        while (p != null) {
-            if (set.contains(p)) {
-                return p;
+        while (headA != null && headB != null) {
+            p = headA;
+            headA = headB;
+            headB = p;
+            if (set.contains(headA)) {
+                res = headA;
+                break;
             }
-            p = p.next;
+            set.add(headA);
+            //调整访问部分的链表方向
+            p = headA;
+            headA = headA.next;
+            p.next = tempA;
+            tempA = p;
         }
-        return null;
+        if (res == null) {//没找到交点可能是较短的链表遍历完了
+            ListNode head = headA == null ? headB : headA;
+            ListNode temp = headA == null ? tempB : tempA;
+            while (head != null) {
+                if (set.contains(head)) {
+                    res = head;
+                    break;
+                }
+                p = head;
+                head = head.next;
+                p.next = temp;
+                temp = p;
+            }
+        }
+        if (res != null) {//找到节点后，调整相交部分
+            if (res == headB) {//headB为交点，则将B一套指到到A上,将B定位到非交点，以待调整
+                headB = headA;
+                p = tempA;
+                tempA = tempB;
+                tempB = p;
+            }
+            while (tempB != res) {//整理从交点到链表尾的部分,调回原方向
+                p = tempB;
+                tempB = tempB.next;
+                p.next = headB;
+                headB = p;
+            }
+            //调整交点
+            tempB = tempB.next;
+            res.next = headB;
+            headA = headB = res;
+        }
+        //调整不相交部分
+        while (tempA != null) {
+            p = tempA;
+            tempA = tempA.next;
+            p.next = headA;
+            headA = p;
+        }
+        while (tempB != null) {
+            p = tempB;
+            tempB = tempB.next;
+            p.next = headB;
+            headB = p;
+        }
+        return res;
     }
 }
