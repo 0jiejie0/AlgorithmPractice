@@ -1,9 +1,5 @@
 package main.problemAndSolving.leetcode_20200927WeekRankList;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
-
 //我们有 n 栋楼，编号从 0 到 n - 1 。每栋楼有若干员工。由于现在是换楼的季节，部分员工想要换一栋楼居住。
 //
 //给你一个数组 requests ，其中 requests[i] = [fromi, toi] ，表示一个员工请求从编号为 fromi 的楼搬到编号为 toi 的楼。
@@ -53,61 +49,63 @@ import java.util.Queue;
 //1 <= requests.length <= 16
 //requests[i].length == 2
 //0 <= fromi, toi < n
+
+//本题目并未通过
 public class T5526最多可达成的换楼请求数目 {
     //在有向图中找最大的问题规模不大
     //等效有向图节点出入度相等的最大边数
-    public int maximumRequests(int n, int[][] requests) {
-        int tempLength = requests.length + 1;//收缩的长度反映可满足的请求数(并不完全等于，有一部分是两个请求的一半，另行计算)
-        Queue<List<Integer>> simply = new LinkedList<>();
-        List<Integer> tempLine;
-        for (int[] request : requests) {//深拷贝
-            tempLine = new LinkedList<>();
-            tempLine.add(request[0]);
-            tempLine.add(request[1]);
-            simply.add(tempLine);
-        }
-        //从收缩队列依次遍历，直到无边可以收缩（1->2,2->5===>1->5）为止
-        while (0 < tempLength) {//剩余待收缩（可能不能收缩）边数为0时退出循环
-            //挑出一个边
-            List<Integer> selectedEdge = simply.poll();
-            //自反的情况，该边出度入度在同一个点
-            if (selectedEdge != null && selectedEdge.get(0).equals(selectedEdge.get(1))) {//请求搬入搬出的是同一栋楼，直接移除可满足请求
-                selectedEdge = null;
-            } else {
-                //查找出度为该边入度的其他边
-                for (List<Integer> findedEdge : simply) {
-                    //收缩
-                    if (selectedEdge != null && selectedEdge.get(1).equals(findedEdge.get(0))) {
-                        //由于前面已经去除了自反的情况，所以找到的边和选定的边一定不同
-                        findedEdge.set(0, selectedEdge.get(0));//收缩，将出度靠到入度上(由于选定的边已经出队，所以不是反向靠拢)
-                        selectedEdge = null;
-                    }
-                }
-            }
-            if (selectedEdge != null) {//没有收缩的情况下
-                simply.offer(selectedEdge);
-                tempLength--;//控制剩余收缩边数（所有边都已经不能收缩时退出）
-            } else {//每次收缩后，对齐待收缩边数到全边数
-                tempLength = simply.size();
-            }
-        }
-        //计算可满足请求数
-        tempLength = requests.length - simply.size();
-        //对照原数组，去除本就不可满足的原请求
-        for (int i = 0; i < simply.size(); i++) {
-            tempLine = simply.poll();
-            for (int[] request : requests) {
-                if (tempLine != null && tempLine.get(0).equals(request[0]) && tempLine.get(1).equals(request[1])) {
-                    tempLine = null;
-                    i--;//simply.size()实时更新，i对应改变
-                }
-            }
-            if (tempLine != null) {
-                simply.offer(tempLine);
-            }
-        }
-        //收缩并去除本就不可满足请求后，剩余的每一条不可满足请求，代表原来的两条不可满足请求
-        //可满足请求=收缩部分长度-收缩后不可满足请求
-        return tempLength - simply.size();
-    }
+//    public int maximumRequests(int n, int[][] requests) {
+//        int tempLength = requests.length + 1;//收缩的长度反映可满足的请求数(并不完全等于，有一部分是两个请求的一半，另行计算)
+//        Queue<List<Integer>> simply = new LinkedList<>();
+//        List<Integer> tempLine;
+//        for (int[] request : requests) {//深拷贝
+//            tempLine = new LinkedList<>();
+//            tempLine.add(request[0]);
+//            tempLine.add(request[1]);
+//            simply.add(tempLine);
+//        }
+//        //从收缩队列依次遍历，直到无边可以收缩（1->2,2->5===>1->5）为止
+//        while (0 < tempLength) {//剩余待收缩（可能不能收缩）边数为0时退出循环
+//            //挑出一个边
+//            List<Integer> selectedEdge = simply.poll();
+//            //自反的情况，该边出度入度在同一个点
+//            if (selectedEdge != null && selectedEdge.get(0).equals(selectedEdge.get(1))) {//请求搬入搬出的是同一栋楼，直接移除可满足请求
+//                selectedEdge = null;
+//            } else {
+//                //查找出度为该边入度的其他边
+//                for (List<Integer> findedEdge : simply) {
+//                    //收缩
+//                    if (selectedEdge != null && selectedEdge.get(1).equals(findedEdge.get(0))) {
+//                        //由于前面已经去除了自反的情况，所以找到的边和选定的边一定不同
+//                        findedEdge.set(0, selectedEdge.get(0));//收缩，将出度靠到入度上(由于选定的边已经出队，所以不是反向靠拢)
+//                        selectedEdge = null;
+//                    }
+//                }
+//            }
+//            if (selectedEdge != null) {//没有收缩的情况下
+//                simply.offer(selectedEdge);
+//                tempLength--;//控制剩余收缩边数（所有边都已经不能收缩时退出）
+//            } else {//每次收缩后，对齐待收缩边数到全边数
+//                tempLength = simply.size();
+//            }
+//        }
+//        //计算可满足请求数
+//        tempLength = requests.length - simply.size();
+//        //对照原数组，去除本就不可满足的原请求
+//        for (int i = 0; i < simply.size(); i++) {
+//            tempLine = simply.poll();
+//            for (int[] request : requests) {
+//                if (tempLine != null && tempLine.get(0).equals(request[0]) && tempLine.get(1).equals(request[1])) {
+//                    tempLine = null;
+//                    i--;//simply.size()实时更新，i对应改变
+//                }
+//            }
+//            if (tempLine != null) {
+//                simply.offer(tempLine);
+//            }
+//        }
+//        //收缩并去除本就不可满足请求后，剩余的每一条不可满足请求，代表原来的两条不可满足请求
+//        //可满足请求=收缩部分长度-收缩后不可满足请求
+//        return tempLength - simply.size();
+//    }
 }
