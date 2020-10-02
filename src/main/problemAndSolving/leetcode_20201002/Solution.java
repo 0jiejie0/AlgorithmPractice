@@ -20,24 +20,32 @@ package main.problemAndSolving.leetcode_20201002;
 // 执行耗时:16 ms,击败了26.21% 的Java用户
 //		内存消耗:43.8 MB,击败了27.29% 的Java用户
 
+//		第一次优化，性能仍然很垃圾
+//		执行耗时:16 ms,击败了26.21% 的Java用户
+//		内存消耗:44.5 MB,击败了5.09% 的Java用户
+
 import java.util.HashMap;
 import java.util.Map;
 
 public class Solution {
     public int majorityElement(int[] nums) {
+        if (nums.length < 2) {
+            return nums.length == 0 ? 0 : nums[0];
+        }
         Map<Integer, Integer> map = new HashMap<>();
+        int temp;
         for (int n :
                 nums) {
             if (!map.containsKey(n)) {
                 map.put(n, 1);
             } else {
-                map.put(n, map.get(n) + 1);
-            }
-        }
-        for (int n :
-                map.keySet()) {
-            if ((map.get(n) << 1) > nums.length) {//两倍运算一位移位就够了！这里的bug迟迟看不出来
-                return n;
+                temp = map.get(n) + 1;
+                //这里的结果是唯一的，因为同时只可能有一个数的数量，超过总数的一半
+                //所以在计算过程中清点数目，省去转换Set时间
+                if ((temp << 1) > nums.length) {
+                    return n;
+                }
+                map.put(n, temp);
             }
         }
         return 0;
