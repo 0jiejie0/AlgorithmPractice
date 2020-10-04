@@ -24,30 +24,26 @@ package main.problemAndSolving.leetcode_20201002;
 //		执行耗时:16 ms,击败了26.21% 的Java用户
 //		内存消耗:44.5 MB,击败了5.09% 的Java用户
 
-import java.util.HashMap;
-import java.util.Map;
+// 看了官方题解，投票法果然是好，性能 效率相比之下非常出色
+// 执行耗时:2 ms,击败了77.18% 的Java用户
+//		内存消耗:42.1 MB,击败了58.42% 的Java用户
 
 public class Solution {
     public int majorityElement(int[] nums) {
         if (nums.length < 2) {
             return nums.length == 0 ? 0 : nums[0];
         }
-        Map<Integer, Integer> map = new HashMap<>();
-        int temp;
-        for (int n :
-                nums) {
-            if (!map.containsKey(n)) {
-                map.put(n, 1);
-            } else {
-                temp = map.get(n) + 1;
-                //这里的结果是唯一的，因为同时只可能有一个数的数量，超过总数的一半
-                //所以在计算过程中清点数目，省去转换Set时间
-                if ((temp << 1) > nums.length) {
-                    return n;
-                }
-                map.put(n, temp);
+        int count = 0, mode = nums[0];
+        for (int n : nums) {
+            if (count == 0) {//计数为0时，切换众数
+                mode = n;
+            } else if (n != mode) {//遍历到和众数不同的数，扣除1票
+                count--;
+            }
+            if (n == mode) {//众数和当前数相同时（或计数为零时，计一票）
+                count++;
             }
         }
-        return 0;
+        return mode;
     }
 }
