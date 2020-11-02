@@ -1,7 +1,7 @@
 package test.algo._02递归;
 
 import junit.framework.TestCase;
-import main.algo._02递归.最大公约数;
+import main.algo._02查找排序上.最大公约数;
 import org.junit.Assert;
 
 public class 最大公约数Test extends TestCase {

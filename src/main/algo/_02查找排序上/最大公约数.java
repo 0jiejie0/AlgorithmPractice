@@ -1,4 +1,4 @@
-package main.algo._02递归;
+package main.algo._02查找排序上;
 
 public class 最大公约数 {
     /**
