@@ -31,31 +31,26 @@ package main.problemAndSolving.leetcode_20201106;
 // 0 <= nums[i] <= 400
 //
 // Related Topics 动态规划
+// 注意状态转换的逆向思维，换用官方思路瞬间通过
+// 解答成功: 执行耗时:0 ms,击败了100.00% 的Java用户
+// 内存消耗:35.9 MB,击败了88.24% 的Java用户
 public class Solution {
-    int maxSum = 0;
-    int[] nums;
-
     public int rob(int[] nums) {
-        this.nums = nums;
-        find(0, 0);
-        return maxSum;
-    }
-
-    /**
-     * @param start      可搜索的下标（对可搜索范围的前两个元素分析+后续范围）
-     * @param currentSum 本次搜索前已得金额
-     */
-    private void find(int start, int currentSum) {
-        if (start > nums.length - 1) {//下标越界时无需继续加和，比较最大金额
-            if (currentSum > maxSum) {
-                maxSum = currentSum;
-            }
-        } else {
-            find(start + 2, currentSum + nums[start]);
-            if (start < nums.length - 1) {
-                find(start + 3, currentSum + nums[start + 1]);
-            }
+        if (nums.length == 0) {
+            return 0;
+        } else if (nums.length == 1) {
+            return nums[0];
         }
-
+        int last = nums[0];
+        int res = nums[1];
+        if (res < last) {
+            res = last;
+        }
+        for (int i = 2; i < nums.length; i++) {
+            int temp = Math.max(res, nums[i] + last);
+            last = res;
+            res = temp;
+        }
+        return res;
     }
 }
