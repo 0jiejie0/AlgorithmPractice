@@ -26,7 +26,6 @@ public class Main {
      * @param args
      */
     public static void main(String[] args) {
-        // TODO Auto-generated method stub
         Scanner inputScanner = new Scanner(System.in);
         int n = inputScanner.nextInt();
         int q = inputScanner.nextInt();
@@ -63,7 +62,6 @@ class TreeNode {
     }
 
     public TreeNode(int data) {
-        // TODO Auto-generated constructor stub
         this.data = data;
         Main.map.put(data, this);
     }

@@ -17,7 +17,6 @@ public class Main {
      * @param args
      */
     public static void main(String[] args) {
-        // TODO Auto-generated method stub
         StringBuilder stringBuilder = new StringBuilder();
         long res = 0;
         Set<Integer> set = new HashSet<Integer>();

@@ -11,7 +11,6 @@ public class Main {
      * @param args
      */
     public static void main(String[] args) {
-        // TODO Auto-generated method stub
         double xa = 2.3, ya = 2.5, xb = 6.4, yb = 3.1, xc = 5.1, yc = 7.2;
         double a = (xb - xa);
         double b = (yc - ya);

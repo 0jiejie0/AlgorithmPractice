@@ -18,7 +18,6 @@ public class Main {
      * @param args
      */
     public static void main(String[] args) {
-        // TODO Auto-generated method stub
         // 从根下1 000 000 000=31622到根下9 999 999 999=100 000
         for (int i = 100000; i >= 31622; i--) {
             if (test(((long) i) * i)) {
