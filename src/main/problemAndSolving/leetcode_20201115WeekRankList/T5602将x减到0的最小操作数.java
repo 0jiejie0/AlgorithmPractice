@@ -44,33 +44,30 @@ public class T5602将x减到0的最小操作数 {
         if (l == -1) {//上个for中if没执行，说明所有和都小于x，没有符合条件的操作  此处排除了x大于全部元素和的情况
             return -1;
         }
+        int tempSum;
         while (true) {
             if (-1 == l && nums.length == r) {//左和和右和都不含有元素，表明x小于任何一次求和，至少是首尾末端元素都大于x
                 break;
             }
+            tempSum = leftSum + rightSum;
             //依次判断两和之和与x大小关系
-            if (leftSum + rightSum == x) {//相等则通过下标计算两和所含元素数量，与历史最小数比对、保存，
+            if (tempSum ==x){//相等则通过下标计算两和所含元素数量，与历史最小数比对、保存，
                 if (l + 1 + nums.length - r < res) {
                     res = l + 1 + nums.length - r;
                 }
-                // 后而左和弹出一个元素，右和加入一个元素，并移动下标
-                if (l >= 0) {
-                    leftSum -= nums[l--];
-                }
-                if (r > 0) {
-                    rightSum += nums[--r];
-                } else {//r==0表明所有元素都已加到右和中，再无可寻找条件
-                    break;
-                }
-            } else if (leftSum + rightSum > x) {//大于则左和弹出一个元素，并移动下标
+            }
+            if (tempSum >= x) {//大于或相等时，左和弹出一个元素，并移动下标
                 if (l >= 0) {
                     leftSum -= nums[l--];
                 } else {//左和已空，表明单右和已大于x，x条件从此不再满足
                     break;
                 }
-            } else {//小于则右和加入元素，并移动下标
+            }
+            if (tempSum <= x) {//小于或相等时，右和加入元素，并移动下标
                 if (r > 0) {
                     rightSum += nums[--r];
+                } else {//r==0表明所有元素都已加到右和中，再无可寻找条件
+                    break;
                 }
             }
         }
