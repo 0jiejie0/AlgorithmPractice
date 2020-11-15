@@ -29,75 +29,53 @@ package main.problemAndSolving.leetcode_20201115WeekRankList;
 //1 <= x <= 109
 public class T5602将x减到0的最小操作数 {
     public int minOperations(int[] nums, int x) {
-        //首先建立2个长度为n的数组，
-        int[] leftToRight = new int[nums.length];
-        int[] rightToLeft = new int[nums.length];
-        int l = -1, r = -1, res = nums.length + 1;
-        // 在数组中生成预处理数据（原数组 从左到右或从右到左累加当前长度的元素 和）
-        leftToRight[0] = nums[0];
-        for (int i = 1; i < nums.length; i++) {
-            leftToRight[i] = leftToRight[i - 1] + nums[i];
-            //预处理至当前和大于等于x时停止（再大的数据已不需要）
-            //记录生成的数据在数组中的范围下标
-            if (leftToRight[i] >= x) {
+        //优化思路：无需先建立记和数组，只需要两个变量，在计算过程中对和累加或减去一个元素即可
+        int res = nums.length + 1;
+        //首先一个和变量从左端向右累加，和达x时停止，另外再有一个和变量用以从右向左计算
+        int leftSum = 0, rightSum = 0;
+        //初始化两个和变量对应下标，一个是记和位置，一个是右方末端
+        int l = -1, r = nums.length;
+        for (int i = 0; i < nums.length; i++) {
+            if ((leftSum += nums[i]) >= x) {
                 l = i;
                 break;
             }
         }
-        rightToLeft[0] = nums[nums.length - 1];
-        for (int i = 1; i < nums.length; i++) {
-            rightToLeft[i] = rightToLeft[i - 1] + nums[nums.length - i - 1];
-            if (rightToLeft[i] >= x) {
-                r = i;
+        if (l == -1) {//上个for中if没执行，说明所有和都小于x，没有符合条件的操作  此处排除了x大于全部元素和的情况
+            return -1;
+        }
+        while (true) {
+            if (-1 == l && nums.length == r) {//左和和右和都不含有元素，表明x小于任何一次求和，至少是首尾末端元素都大于x
                 break;
             }
-        }
-        //从一个数组的尾端扫描+从另一个数组的起点扫描，
-        int a = l, b = -1;
-        while (a >= -1 && b <= r) {
-            //ab为-1说明从一端操作，只记一个数组
-            if (a == -1) {//ltor数组结束扫描
-                if (b < 0) {//ab同为-1说明最小和也小于x，不能得到x
+            //依次判断两和之和与x大小关系
+            if (leftSum + rightSum == x) {//相等则通过下标计算两和所含元素数量，与历史最小数比对、保存，
+                if (l + 1 + nums.length - r < res) {
+                    res = l + 1 + nums.length - r;
+                }
+                // 后而左和弹出一个元素，右和加入一个元素，并移动下标
+                if (l >= 0) {
+                    leftSum -= nums[l--];
+                }
+                if (r > 0) {
+                    rightSum += nums[--r];
+                } else {//r==0表明所有元素都已加到右和中，再无可寻找条件
                     break;
                 }
-                if (rightToLeft[b] < x) {
-                    b++;
-                } else {
-                    if (rightToLeft[b] == x) {
-                        if (b + 1 < res) {
-                            res = b + 1;
-                        }
-                    }
+            } else if (leftSum + rightSum > x) {//大于则左和弹出一个元素，并移动下标
+                if (l >= 0) {
+                    leftSum -= nums[l--];
+                } else {//左和已空，表明单右和已大于x，x条件从此不再满足
                     break;
                 }
-            } else if (b == -1) {//rtol数组未开始扫描
-                if (leftToRight[a] == x) {//判断左端的累加操作是否满足条件
-                    if (a + 1 < res) {
-                        res = a + 1;
-                    }
-                    a--;
-                } else if (leftToRight[a] > x) {
-                    a--;
-                } else {
-                    b++;
-                }
-            } else {
-                if (leftToRight[a] + rightToLeft[b] == x) {
-                    // 记录所有和为x的两元素的下标和，与历史最小下标和比较，
-                    if (a + b + 2 < res) {
-                        res = a + b + 2;
-                    }
-                    a--;
-                    b++;
-                } else if (leftToRight[a] + rightToLeft[b] > x) {
-                    a--;
-                } else {
-                    b++;
+            } else {//小于则右和加入元素，并移动下标
+                if (r > 0) {
+                    rightSum += nums[--r];
                 }
             }
         }
-        // 所有结果中最小下标和即为所求
-        if (nums.length + 1 == res) {
+        // 所有结果中最小元素数即为所求
+        if (nums.length + 1 == res) {//res未改变说明不满足条件
             res = -1;
         }
         return res;
