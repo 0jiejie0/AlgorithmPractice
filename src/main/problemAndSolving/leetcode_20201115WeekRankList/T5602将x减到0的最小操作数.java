@@ -30,51 +30,42 @@ package main.problemAndSolving.leetcode_20201115WeekRankList;
 public class T5602将x减到0的最小操作数 {
     public int minOperations(int[] nums, int x) {
         //优化思路：无需先建立记和数组，只需要两个变量，在计算过程中对和累加或减去一个元素即可
-        int res = nums.length + 1;
-        //首先一个和变量从左端向右累加，和达x时停止，另外再有一个和变量用以从右向左计算
-        int leftSum = 0, rightSum = 0;
-        //初始化两个和变量对应下标，一个是记和位置，一个是右方末端
-        int l = -1, r = nums.length;
-        for (int i = 0; i < nums.length; i++) {
-            if ((leftSum += nums[i]) >= x) {
-                l = i;
-                break;
-            }
-        }
-        if (l == -1) {//上个for中if没执行，说明所有和都小于x，没有符合条件的操作  此处排除了x大于全部元素和的情况
+        //优化思路2：反向求和，对nums中所有元素求x补集的和，此时只要在各个连续子数组中找补集和，以简化比较大小的逻辑代码
+        if (x < nums[0] && x < nums[nums.length - 1]) {//x小于首尾元素，无满足条件的操作
             return -1;
         }
-        int tempSum;
+        int sum = 0;
+        for (int n : nums) {
+            sum += n;
+        }
+        if (sum <= x) {//所有元素和小于x，不可满足条件，等于x则只有一次最大的操作数
+            return sum == x ? nums.length : -1;
+        }
+        sum -= x;//补集和
+        int resComple = -1;//补集元素最大数
+        int l = 0, r = 1;
+        int currentSum = nums[0];
+        int tempSum = currentSum;
         while (true) {
-            if (-1 == l && nums.length == r) {//左和和右和都不含有元素，表明x小于任何一次求和，至少是首尾末端元素都大于x
-                break;
-            }
-            tempSum = leftSum + rightSum;
-            //依次判断两和之和与x大小关系
-            if (tempSum ==x){//相等则通过下标计算两和所含元素数量，与历史最小数比对、保存，
-                if (l + 1 + nums.length - r < res) {
-                    res = l + 1 + nums.length - r;
+            //从一端（左端）开始，查看当前计算区间内元素和与补集和的大小关系，
+            //区间元素和等于补集和，比较区间内元素数和补集最大数resComple比较，保留较大值,并移动左右端点（放在后续步骤进行）
+            if (currentSum == sum) {
+                if (r - l > resComple) {
+                    resComple = r - l;
                 }
             }
-            if (tempSum >= x) {//大于或相等时，左和弹出一个元素，并移动下标
-                if (l >= 0) {
-                    leftSum -= nums[l--];
-                } else {//左和已空，表明单右和已大于x，x条件从此不再满足
+            // 区间元素和大于等于补集和则左端点右移，区间元素小于补集和则右端点右移
+            if (currentSum >= sum) {
+                tempSum -= nums[l++];
+            }
+            if (currentSum <= sum) {
+                if (r == nums.length) {//循环控制在右端点移动到数组末端前
                     break;
                 }
+                tempSum += nums[r++];
             }
-            if (tempSum <= x) {//小于或相等时，右和加入元素，并移动下标
-                if (r > 0) {
-                    rightSum += nums[--r];
-                } else {//r==0表明所有元素都已加到右和中，再无可寻找条件
-                    break;
-                }
-            }
+            currentSum = tempSum;
         }
-        // 所有结果中最小元素数即为所求
-        if (nums.length + 1 == res) {//res未改变说明不满足条件
-            res = -1;
-        }
-        return res;
+        return resComple == -1 ? -1 : (nums.length - resComple);
     }
 }
