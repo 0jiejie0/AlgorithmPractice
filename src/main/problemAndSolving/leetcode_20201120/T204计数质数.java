@@ -1,5 +1,8 @@
 package main.problemAndSolving.leetcode_20201120;
 
+import java.util.LinkedList;
+import java.util.List;
+
 //统计所有小于非负整数 n 的质数的数量。
 //
 //
@@ -34,25 +37,35 @@ package main.problemAndSolving.leetcode_20201120;
 // 果然，暴力是不行的，大的数超时了
 // 最后执行的输入：499979
 // 将因数查找区间缩小到1~平方根，快了很多，但依然超时
+
+// 扩展跳过偶数的思路，跳过所有的合数，总算没再超时
+// 执行耗时:494 ms,击败了10.92% 的Java用户
+//		内存消耗:46 MB,击败了5.03% 的Java用户
 public class T204计数质数 {
     public int countPrimes(int n) {
         if (n <= 3) {
             return n == 3 ? 1 : 0;
         }
-        int res = 1;
+//        int res = 1;
         boolean isPrime;
+        List<Integer> primes = new LinkedList<>();
         for (int i = 3; i < n; i += 2) {//前面已经排除了2，以后出现的质数一定不是偶数（2的倍数）
             isPrime = true;//下方循环找到因数时标记非质数
-            for (int j = 3; j <= Math.sqrt(i); j += 2) {//因数查找范围控制在[3，i开平方)，且跳过偶数
+            for (int j : primes) {//因数查找范围控制在[3，i开平方)，且跳过合数
+                if (j > Math.sqrt(i)) {
+                    break;
+                }
                 if ((i % j) == 0) {
                     isPrime = false;
                     break;
                 }
             }
             if (isPrime) {
-                res++;
+                primes.add(i);
+//                res++;
             }
         }
-        return res;
+        primes.add(2);//放在最后节约一定算力
+        return primes.size();
     }
 }
