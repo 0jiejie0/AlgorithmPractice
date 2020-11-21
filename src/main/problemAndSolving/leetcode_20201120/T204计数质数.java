@@ -33,6 +33,7 @@ package main.problemAndSolving.leetcode_20201120;
 // Related Topics 哈希表 数学
 // 果然，暴力是不行的，大的数超时了
 // 最后执行的输入：499979
+// 将因数查找区间缩小到1~平方根，快了很多，但依然超时
 public class T204计数质数 {
     public int countPrimes(int n) {
         if (n <= 3) {
@@ -42,7 +43,7 @@ public class T204计数质数 {
         boolean isPrime;
         for (int i = 3; i < n; i += 2) {//前面已经排除了2，以后出现的质数一定不是偶数（2的倍数）
             isPrime = true;//下方循环找到因数时标记非质数
-            for (int j = 3; j < i >> 1; j += 2) {//因数查找范围控制在[3，i/2)，且跳过偶数
+            for (int j = 3; j <= Math.sqrt(i); j += 2) {//因数查找范围控制在[3，i开平方)，且跳过偶数
                 if ((i % j) == 0) {
                     isPrime = false;
                     break;
