@@ -19,6 +19,11 @@ public class T204计数质数Test extends TestCase {
         Assert.assertEquals(4, exam.countPrimes(10));
         Assert.assertEquals(0, exam.countPrimes(0));
         Assert.assertEquals(0, exam.countPrimes(1));
+        Assert.assertEquals(0, exam.countPrimes(2));
+        Assert.assertEquals(1, exam.countPrimes(3));
+        Assert.assertEquals(2, exam.countPrimes(4));
+        Assert.assertEquals(2, exam.countPrimes(5));
+        Assert.assertEquals(3, exam.countPrimes(6));
         Assert.assertEquals(41537, exam.countPrimes(499979));
     }
 }

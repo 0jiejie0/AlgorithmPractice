@@ -1,8 +1,5 @@
 package main.problemAndSolving.leetcode_20201120;
 
-import java.util.LinkedList;
-import java.util.List;
-
 //统计所有小于非负整数 n 的质数的数量。
 //
 //
@@ -38,34 +35,32 @@ import java.util.List;
 // 最后执行的输入：499979
 // 将因数查找区间缩小到1~平方根，快了很多，但依然超时
 
-// 扩展跳过偶数的思路，跳过所有的合数，总算没再超时
+// 扩展查找因数时跳过偶数的思路，在查找因数时跳过所有的合数，总算没再超时
 // 执行耗时:494 ms,击败了10.92% 的Java用户
 //		内存消耗:46 MB,击败了5.03% 的Java用户
+
+// 厄拉多塞筛法 虽然比跳合数的效率高几倍，但依然不够快
+// 执行耗时:83 ms,击败了16.16% 的Java用户
+//		内存消耗:35.6 MB,击败了88.56% 的Java用户
+//		执行耗时:75 ms,击败了16.45% 的Java用户
+//		内存消耗:35.6 MB,击败了89.21% 的Java用户
 public class T204计数质数 {
     public int countPrimes(int n) {
         if (n <= 3) {
             return n == 3 ? 1 : 0;
         }
-//        int res = 1;
-        boolean isPrime;
-        List<Integer> primes = new LinkedList<>();
-        for (int i = 3; i < n; i += 2) {//前面已经排除了2，以后出现的质数一定不是偶数（2的倍数）
-            isPrime = true;//下方循环找到因数时标记非质数
-            for (int j : primes) {//因数查找范围控制在[3，i开平方)，且跳过合数
-                if (j > Math.sqrt(i)) {
-                    break;
+        byte[] counts = new byte[n / 8 + 1];
+        int res = 0;
+        for (int i = 1; i < n - 1; i++) {
+            if ((counts[i / 8] & (1 << (i % 8))) == 0) {
+                res++;
+                i++;
+                for (int j = 2 * i - 1; j < n; j += i) {
+                    counts[j / 8] |= (1 << (j % 8));
                 }
-                if ((i % j) == 0) {
-                    isPrime = false;
-                    break;
-                }
-            }
-            if (isPrime) {
-                primes.add(i);
-//                res++;
+                i--;
             }
         }
-        primes.add(2);//放在最后节约一定算力
-        return primes.size();
+        return res;
     }
 }
