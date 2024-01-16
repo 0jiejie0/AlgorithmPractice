@@ -1,7 +1,7 @@
 package test.problemAndSolving.leetcode_20200809WeekRankList;
 
 import junit.framework.TestCase;
-import main.problemAndSolving.leetcode_20200809WeekRankList.T1545找出第N个二进制字符串中的第K位;
+import main.problemAndSolving.leetcode.leetcode_20200809WeekRankList.T1545找出第N个二进制字符串中的第K位;
 import org.junit.Assert;
 
 public class T1545找出第N个二进制字符串中的第K位Test extends TestCase {

@@ -1,7 +1,7 @@
 package test.problemAndSolving.leetcode_20201206WeekRankList;
 
 import junit.framework.TestCase;
-import main.problemAndSolving.leetcode_20201206WeekRankList.T5618K和数对的最大数目;
+import main.problemAndSolving.leetcode.leetcode_20201206WeekRankList.T5618K和数对的最大数目;
 
 public class T5618K和数对的最大数目Test extends TestCase {
     T5618K和数对的最大数目 exam;

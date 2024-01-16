@@ -1,8 +1,8 @@
 package test.problemAndSolving.leetcode_20200709;
 
 import junit.framework.TestCase;
-import main.problemAndSolving.leetcode_20200709.ListNode;
-import main.problemAndSolving.leetcode_20200709.Solution;
+import main.problemAndSolving.leetcode.leetcode_20200709.ListNode;
+import main.problemAndSolving.leetcode.leetcode_20200709.Solution;
 
 public class SolutionTest extends TestCase {
     Solution solution;

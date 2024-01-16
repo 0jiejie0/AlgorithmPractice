@@ -1,8 +1,8 @@
 package test.problemAndSolving.leetcode_20200806;
 
 import junit.framework.TestCase;
-import main.problemAndSolving.leetcode_20200806.Solution;
-import main.problemAndSolving.leetcode_20200806.TreeNode;
+import main.problemAndSolving.leetcode.leetcode_20200806.Solution;
+import main.problemAndSolving.leetcode.leetcode_20200806.TreeNode;
 import org.junit.Assert;
 
 public class SolutionTest extends TestCase {

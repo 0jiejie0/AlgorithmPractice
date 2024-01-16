@@ -1,7 +1,7 @@
 package test.problemAndSolving.leetcode_20200712WeekRankList;
 
 import junit.framework.TestCase;
-import main.problemAndSolving.leetcode_20200712WeekRankList.仅含1的子串数;
+import main.problemAndSolving.leetcode.leetcode_20200712WeekRankList.仅含1的子串数;
 import org.junit.Assert;
 
 public class 仅含1的子串数Test extends TestCase {

@@ -1,7 +1,7 @@
 package test.problemAndSolving.leetcode_20200927WeekRankList;
 
 import junit.framework.TestCase;
-import main.problemAndSolving.leetcode_20200927WeekRankList.T5523文件夹操作日志搜集器;
+import main.problemAndSolving.leetcode.leetcode_20200927WeekRankList.T5523文件夹操作日志搜集器;
 import org.junit.Assert;
 
 public class T5523文件夹操作日志搜集器Test extends TestCase {

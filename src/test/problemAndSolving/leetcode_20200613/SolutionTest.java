@@ -1,6 +1,6 @@
 package test.problemAndSolving.leetcode_20200613;
 
-import main.problemAndSolving.leetcode_20200613.Solution;
+import main.problemAndSolving.leetcode.leetcode_20200613.Solution;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;

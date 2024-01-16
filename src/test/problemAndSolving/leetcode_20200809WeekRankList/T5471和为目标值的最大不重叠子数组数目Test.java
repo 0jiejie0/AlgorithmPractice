@@ -1,7 +1,7 @@
 package test.problemAndSolving.leetcode_20200809WeekRankList;
 
 import junit.framework.TestCase;
-import main.problemAndSolving.leetcode_20200809WeekRankList.T5471和为目标值的最大不重叠子数组数目;
+import main.problemAndSolving.leetcode.leetcode_20200809WeekRankList.T5471和为目标值的最大不重叠子数组数目;
 import org.junit.Assert;
 
 public class T5471和为目标值的最大不重叠子数组数目Test extends TestCase {

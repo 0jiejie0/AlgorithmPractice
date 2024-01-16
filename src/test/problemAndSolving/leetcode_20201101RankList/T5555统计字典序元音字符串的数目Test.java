@@ -1,7 +1,7 @@
 package test.problemAndSolving.leetcode_20201101RankList;
 
 import junit.framework.TestCase;
-import main.problemAndSolving.leetcode_20201101RankList.T5555统计字典序元音字符串的数目;
+import main.problemAndSolving.leetcode.leetcode_20201101RankList.T5555统计字典序元音字符串的数目;
 import org.junit.Assert;
 
 public class T5555统计字典序元音字符串的数目Test extends TestCase {

@@ -1,7 +1,7 @@
 package test.problemAndSolving.leetcode_20201129WeekRanklist;
 
 import junit.framework.TestCase;
-import main.problemAndSolving.leetcode_20201129WeekRanklist.T5615使数组互补的最少操作次数;
+import main.problemAndSolving.leetcode.leetcode_20201129WeekRanklist.T5615使数组互补的最少操作次数;
 
 public class T5615使数组互补的最少操作次数Test extends TestCase {
     T5615使数组互补的最少操作次数 exam;

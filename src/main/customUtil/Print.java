@@ -2,6 +2,7 @@ package main.customUtil;
 
 /**
  * 设置对一定数据结构的输出，以减少后续代码量
+ * （大量数据调试时应用，debug过慢，周期太长）
  */
 public class Print {
     /**

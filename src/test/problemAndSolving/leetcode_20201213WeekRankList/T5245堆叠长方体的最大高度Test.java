@@ -1,7 +1,7 @@
 package test.problemAndSolving.leetcode_20201213WeekRankList;
 
 import junit.framework.TestCase;
-import main.problemAndSolving.leetcode_20201213WeekRankList.T5245堆叠长方体的最大高度;
+import main.problemAndSolving.leetcode.leetcode_20201213WeekRankList.T5245堆叠长方体的最大高度;
 
 public class T5245堆叠长方体的最大高度Test extends TestCase {
     T5245堆叠长方体的最大高度 exam;

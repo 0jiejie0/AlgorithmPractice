@@ -1,7 +1,7 @@
 package test.problemAndSolving.leetcode_20201115WeekRankList;
 
 import junit.framework.TestCase;
-import main.problemAndSolving.leetcode_20201115WeekRankList.T5602将x减到0的最小操作数;
+import main.problemAndSolving.leetcode.leetcode_20201115WeekRankList.T5602将x减到0的最小操作数;
 import org.junit.Assert;
 
 public class T5602将x减到0的最小操作数Test extends TestCase {

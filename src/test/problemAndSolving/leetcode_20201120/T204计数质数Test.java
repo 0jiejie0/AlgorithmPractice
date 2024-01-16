@@ -1,7 +1,7 @@
 package test.problemAndSolving.leetcode_20201120;
 
 import junit.framework.TestCase;
-import main.problemAndSolving.leetcode_20201120.T204计数质数;
+import main.problemAndSolving.leetcode.leetcode_20201120.T204计数质数;
 import org.junit.Assert;
 
 public class T204计数质数Test extends TestCase {

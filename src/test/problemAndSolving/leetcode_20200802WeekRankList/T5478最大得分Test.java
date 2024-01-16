@@ -1,7 +1,7 @@
 package test.problemAndSolving.leetcode_20200802WeekRankList;
 
 import junit.framework.TestCase;
-import main.problemAndSolving.leetcode_20200802WeekRankList.T5478最大得分;
+import main.problemAndSolving.leetcode.leetcode_20200802WeekRankList.T5478最大得分;
 import org.junit.Assert;
 
 public class T5478最大得分Test extends TestCase {

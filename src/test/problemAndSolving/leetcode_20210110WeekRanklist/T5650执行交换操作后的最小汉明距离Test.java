@@ -1,7 +1,7 @@
 package test.problemAndSolving.leetcode_20210110WeekRanklist;
 
 import junit.framework.TestCase;
-import main.problemAndSolving.leetcode_20210110WeekRanklist.T5650执行交换操作后的最小汉明距离;
+import main.problemAndSolving.leetcode.leetcode_20210110WeekRanklist.T5650执行交换操作后的最小汉明距离;
 
 public class T5650执行交换操作后的最小汉明距离Test extends TestCase {
 

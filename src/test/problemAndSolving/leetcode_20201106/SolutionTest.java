@@ -1,7 +1,7 @@
 package test.problemAndSolving.leetcode_20201106;
 
 import junit.framework.TestCase;
-import main.problemAndSolving.leetcode_20201106.Solution;
+import main.problemAndSolving.leetcode.leetcode_20201106.Solution;
 
 import java.util.Random;
 

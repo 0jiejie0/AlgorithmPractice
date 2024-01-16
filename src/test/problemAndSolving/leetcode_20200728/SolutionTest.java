@@ -1,7 +1,7 @@
 package test.problemAndSolving.leetcode_20200728;
 
 import junit.framework.TestCase;
-import main.problemAndSolving.leetcode_20200728.Solution;
+import main.problemAndSolving.leetcode.leetcode_20200728.Solution;
 import org.junit.Assert;
 
 public class SolutionTest extends TestCase {
