@@ -13,5 +13,5 @@ wrong answer：编写完成但未完全通过测试的代码
 compile error：编译错误或异常代码
 
 为[github仓库](https://github.com/0jiejie0/AlgorithmPractice.git)
-做个gitee镜像同步仓库，
+做个[gitee镜像同步仓库](https://gitee.com/ojiejieo/AlgorithmPractice.git)，
 方便随时提交，太久不写代码手生，老出bug，上班摸鱼做道题磨一磨。
