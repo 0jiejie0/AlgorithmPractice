@@ -53,24 +53,27 @@ import java.util.Map;
 
 //leetcode submit region begin(Prohibit modification and deletion)
 class Solution {
+    static int[] cache = new int[10];
+
     public boolean isPalindrome(int x) {
-        if (x < 0) return false;
-        LinkedList<Integer> list = new LinkedList<>();
+        if (x < 10) {
+            if (x < 0) return false;
+            return true;
+        }
+        int pr = 0;
         while (x > 0) {
-            list.add(x % 10);
+            cache[pr++] = x % 10;
             x /= 10;
         }
-        while (!list.isEmpty() && list.getLast().equals(list.pop())) {
-            if (list.isEmpty()) continue;
-            list.removeLast();
-        }
-        return list.isEmpty();
-        // 	执行耗时:7 ms,击败了26.97% 的Java用户
-        //	内存消耗:43.1 MB,击败了19.93% 的Java用户
-    }
-
-    public static void main(String[] args) {
-        System.out.println(new Solution().isPalindrome(10));
+        while (x < pr)
+            if (cache[x++] != cache[--pr]) {
+                x--;
+                pr++;
+                break;
+            }
+        return x >= pr;
+        // 	执行耗时:4 ms,击败了100.00% 的Java用户
+        //	内存消耗:42.9 MB,击败了52.63% 的Java用户
     }
 }
 //leetcode submit region end(Prohibit modification and deletion)
