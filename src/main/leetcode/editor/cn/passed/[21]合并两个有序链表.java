@@ -52,28 +52,36 @@ import main.customUtil.leetcode.ListNode;
  */
 class Solution {
     public ListNode mergeTwoLists(ListNode list1, ListNode list2) {
-        if (list1 == null) return list2;
-        else if (list2 == null) return list1;
-        ListNode head, p;
-        p = head = list1.val < list2.val ? list1 : list2;
-        if (head == list1) list1 = list1.next;
-        else list2 = list2.next;
-        while (list1 != null && list2 != null) {
-            if (list1.val < list2.val) {
-                p.next = list1;
-                p = list1;
-                list1 = list1.next;
-            } else {
-                p.next = list2;
-                p = list2;
-                list2 = list2.next;
+        int[] cache = new int[202];
+        ListNode p = list1;
+        while (p != null && p.next != null) {
+            cache[p.val + 100]++;
+            p = p.next;
+        }
+        if (p != null) {
+            cache[p.val + 100]++;
+            p.next = list2;
+        }
+        p = list2;
+        if (list1 == null) list1 = list2;
+        while (p != null) {
+            cache[p.val + 100]++;
+            p = p.next;
+        }
+        p = list1;
+        for (int i = 0; i < 202; i++) {
+            while (cache[i] > 0) {
+                cache[i]--;
+                p.val = i - 100;
+                p = p.next;
             }
         }
-        if (list1 == null) p.next = list2;
-        else p.next = list1;
-        return head;
+        return list1;
         //	执行耗时:0 ms,击败了100.00% 的Java用户
         //	内存消耗:41.5 MB,击败了26.40% 的Java用户
+        // 调整为 修改节点值 法，提交结果不太稳定，效率不总更高
+        //	执行耗时:0 ms,击败了100.00% 的Java用户
+        //	内存消耗:41.5 MB,击败了46.61% 的Java用户
     }
 }
 //leetcode submit region end(Prohibit modification and deletion)
