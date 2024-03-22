@@ -38,6 +38,7 @@ class Solution {
         if (haystack.length() <= needle.length()) {
             return haystack.equals(needle) ? 0 : -1;
         }
+        // 太久不练差点没想起来，只记得个滑动窗口
         // 这个地方确实应该用滑动窗口，突然想起来可以通过哈希来比对
         int l = 0, r = needle.length();
         int hashStack = 0, hashNeed = 0;
@@ -51,7 +52,7 @@ class Solution {
         }
         if (hashStack == hashNeed) return 0;
         while (r < haystack.length()) {
-            hashStack -= (p * haystackCharArray[++l]);
+            hashStack -= (p * haystackCharArray[l++]);
             hashStack = 31 * hashStack + haystackCharArray[r++];
             if (hashStack == hashNeed) {
                 return l;
@@ -59,11 +60,7 @@ class Solution {
         }
         return -1;
     }
-
-    public static void main(String[] args) {
-        System.out.println(new Solution().strStr("hello","ll"));
-    }
 }
 //leetcode submit region end(Prohibit modification and deletion)
-// 1212123
-// 12123
+// 	执行耗时:0 ms,击败了100.00% 的Java用户
+//	内存消耗:40.4 MB,击败了61.98% 的Java用户
