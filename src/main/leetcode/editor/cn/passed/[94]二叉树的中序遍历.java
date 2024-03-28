@@ -64,28 +64,16 @@ class Solution {
     public List<Integer> inorderTraversal(TreeNode root) {
         LinkedList<Integer> ansList = new LinkedList<>();
         if (root == null) return ansList;
-        TreeNode curNode = root;
-        LinkedList<TreeNode> nodeStack = new LinkedList<>();
-        nodeStack.push(root);
-        while (!nodeStack.isEmpty()) {
-            if (root != (curNode=nodeStack.peek()).left && root != curNode.right && (root = curNode).left != null) {
-                nodeStack.push(root.left);
-            } else if (root != (root = curNode).right) {
-                ansList.add(root.val);
-                if (root.right != null) {
-                    nodeStack.push(root.right);
-                } else nodeStack.pop();
-            } else nodeStack.pop();
+        if (root.left != null) {
+            ansList.addAll(inorderTraversal(root.left));
+        }
+        ansList.add(root.val);
+        if (root.right != null) {
+            ansList.addAll(inorderTraversal(root.right));
         }
         return ansList;
     }
 }
 //leetcode submit region end(Prohibit modification and deletion)
 //	执行耗时:0 ms,击败了100.00% 的Java用户
-//	内存消耗:40.7 MB,击败了35.61% 的Java用户
-// 递归写法的内存消耗偏高，试一下自己调用堆栈，堆栈不太熟，需要多练
-// 自己调用怎么消耗内存更大了呢？
-// 	执行耗时:0 ms,击败了100.00% 的Java用户
-//	内存消耗:40.8 MB,击败了24.27% 的Java用户
-//	执行耗时:0 ms,击败了100.00% 的Java用户
-//	内存消耗:40.7 MB,击败了50.91% 的Java用户
+//	内存消耗:40.7 MB,击败了43.39% 的Java用户
