@@ -33,6 +33,8 @@ package main.leetcode.editor.cn;//给你一个二叉树的根节点 root ， 检
 
 import main.customUtil.leetcode.TreeNode;
 
+import java.util.LinkedList;
+
 //leetcode submit region begin(Prohibit modification and deletion)
 
 /**
@@ -52,17 +54,31 @@ import main.customUtil.leetcode.TreeNode;
  */
 class Solution {
     public boolean isSymmetric(TreeNode root) {
-        if (root == null) return true;
-        return isSymmetric(root.left, root.right);
-    }
-
-    private boolean isSymmetric(TreeNode left, TreeNode right) {
-        if (left == null && right == null) return true;
-        if (left == null && right != null || right == null && left != null) return false;
-        if (left.val != right.val) return false;
-        return isSymmetric(left.left, right.right) && isSymmetric(left.right, right.left);
+        if (root == null || root.left == null && root.right == null) return true;
+        if (root.left == null || root.right == null) return false;
+        LinkedList<TreeNode> lStack = new LinkedList<>();
+        LinkedList<TreeNode> rStack = new LinkedList<>();
+        lStack.add(root.left);
+        rStack.add(root.right);
+        TreeNode lNode = root;
+        TreeNode rNode = root;
+        while ((!lStack.isEmpty()) && (!rStack.isEmpty())) {
+            if ((lNode = lStack.pop()).val != (rNode = rStack.pop()).val) return false;
+            if (lNode.left != null && rNode.right != null) {
+                lStack.push(lNode.left);
+                rStack.push(rNode.right);
+            } else if (lNode.left != null || rNode.right != null) return false;
+            if (lNode.right != null && rNode.left != null) {
+                lStack.push(lNode.right);
+                rStack.push(rNode.left);
+            } else if (lNode.right != null || rNode.left != null) return false;
+        }
+        return lStack.size() == rStack.size();
     }
 }
 //leetcode submit region end(Prohibit modification and deletion)
 //	执行耗时:0 ms,击败了100.00% 的Java用户
 //	内存消耗:40.7 MB,击败了68.94% 的Java用户
+// 这个迭代的性能可以说是非常低了，还不如递归，按说不应该啊
+//	执行耗时:1 ms,击败了18.44% 的Java用户
+//	内存消耗:40.9 MB,击败了11.86% 的Java用户
