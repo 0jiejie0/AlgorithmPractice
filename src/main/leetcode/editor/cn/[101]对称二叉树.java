@@ -61,18 +61,20 @@ class Solution {
         queueList.offer(root.right);
         TreeNode lNode;
         TreeNode rNode;
-        while (!queueList.isEmpty()) {
-            lNode = queueList.poll();
-            rNode = queueList.poll();
-            if (lNode == null ^ rNode == null) return false;
-            if (lNode == null) continue;
+        while ((lNode = queueList.poll()) != null && (rNode = queueList.poll()) != null) {
             if (lNode.val != rNode.val) return false;
-            queueList.offer(lNode.left);
-            queueList.offer(rNode.right);
-            queueList.offer(lNode.right);
-            queueList.offer(rNode.left);
+            if (lNode.left != null && rNode.right != null) {
+                queueList.offer(lNode.left);
+                queueList.offer(rNode.right);
+            } else if (lNode.left == null ^ rNode.right == null)
+                return false;
+            if (lNode.right != null && rNode.left != null) {
+                queueList.offer(lNode.right);
+                queueList.offer(rNode.left);
+            } else if (lNode.right == null ^ rNode.left == null)
+                return false;
         }
-        return true;
+        return lNode == null;
     }
 }
 //leetcode submit region end(Prohibit modification and deletion)
@@ -84,6 +86,3 @@ class Solution {
 // 队列宽搜
 // 	执行耗时:0 ms,击败了100.00% 的Java用户
 //	内存消耗:40.7 MB,击败了71.50% 的Java用户
-// 追求短代码可能造成效率降低
-// 	执行耗时:1 ms,击败了18.41% 的Java用户
-//	内存消耗:40.8 MB,击败了30.27% 的Java用户
