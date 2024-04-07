@@ -1,33 +1,33 @@
 package main.leetcode.editor.cn;//给你一个二叉树的根节点 root ， 检查它是否轴对称。
 //
-// 
 //
-// 示例 1： 
-// 
-// 
+//
+// 示例 1：
+//
+//
 //输入：root = [1,2,2,3,4,4,3]
 //输出：true
-// 
 //
-// 示例 2： 
-// 
-// 
+//
+// 示例 2：
+//
+//
 //输入：root = [1,2,2,null,3,null,3]
 //输出：false
-// 
 //
-// 
 //
-// 提示： 
 //
-// 
-// 树中节点数目在范围 [1, 1000] 内 
-// -100 <= Node.val <= 100 
-// 
 //
-// 
+// 提示：
 //
-// 进阶：你可以运用递归和迭代两种方法解决这个问题吗？ 
+//
+// 树中节点数目在范围 [1, 1000] 内
+// -100 <= Node.val <= 100
+//
+//
+//
+//
+// 进阶：你可以运用递归和迭代两种方法解决这个问题吗？
 //
 // Related Topics 树 深度优先搜索 广度优先搜索 二叉树 👍 2684 👎 0
 
@@ -56,24 +56,25 @@ class Solution {
     public boolean isSymmetric(TreeNode root) {
         if (root == null || root.left == null && root.right == null) return true;
         if (root.left == null || root.right == null) return false;
-        LinkedList<TreeNode> lStack = new LinkedList<>();
-        LinkedList<TreeNode> rStack = new LinkedList<>();
-        lStack.add(root.left);
-        rStack.add(root.right);
-        TreeNode lNode = root;
-        TreeNode rNode = root;
-        while ((!lStack.isEmpty()) && (!rStack.isEmpty())) {
-            if ((lNode = lStack.pop()).val != (rNode = rStack.pop()).val) return false;
+        LinkedList<TreeNode> queueList = new LinkedList<>();
+        queueList.offer(root.left);
+        queueList.offer(root.right);
+        TreeNode lNode;
+        TreeNode rNode;
+        while ((lNode = queueList.poll()) != null && (rNode = queueList.poll()) != null) {
+            if (lNode.val != rNode.val) return false;
             if (lNode.left != null && rNode.right != null) {
-                lStack.push(lNode.left);
-                rStack.push(rNode.right);
-            } else if (lNode.left != null || rNode.right != null) return false;
+                queueList.offer(lNode.left);
+                queueList.offer(rNode.right);
+            } else if (lNode.left == null ^ rNode.right == null)
+                return false;
             if (lNode.right != null && rNode.left != null) {
-                lStack.push(lNode.right);
-                rStack.push(rNode.left);
-            } else if (lNode.right != null || rNode.left != null) return false;
+                queueList.offer(lNode.right);
+                queueList.offer(rNode.left);
+            } else if (lNode.right == null ^ rNode.left == null)
+                return false;
         }
-        return lStack.size() == rStack.size();
+        return lNode == null;
     }
 }
 //leetcode submit region end(Prohibit modification and deletion)
@@ -82,3 +83,6 @@ class Solution {
 // 这个迭代的性能可以说是非常低了，还不如递归，按说不应该啊
 //	执行耗时:1 ms,击败了18.44% 的Java用户
 //	内存消耗:40.9 MB,击败了11.86% 的Java用户
+// 队列宽搜
+// 	执行耗时:0 ms,击败了100.00% 的Java用户
+//	内存消耗:40.7 MB,击败了71.50% 的Java用户
