@@ -33,6 +33,8 @@ package main.leetcode.editor.cn;//给定一个二叉树，找出其最小深度�
 
 import main.customUtil.leetcode.TreeNode;
 
+import java.util.LinkedList;
+
 //leetcode submit region begin(Prohibit modification and deletion)
 
 
@@ -54,14 +56,29 @@ import main.customUtil.leetcode.TreeNode;
 class Solution {
     public int minDepth(TreeNode root) {
         if (root == null) return 0;
-        if (root.left == null) return minDepth(root.right) + 1;
-        if (root.right == null) return minDepth(root.left) + 1;
-        int l = minDepth(root.left);
-        int r = minDepth(root.right);
-        return l > r ? r + 1 : l + 1;
+        int ans = 0;
+        LinkedList<TreeNode> queue = new LinkedList<>();
+        queue.offer(null);
+        queue.offer(root);
+        while (!queue.isEmpty()) {
+            if ((root = queue.poll()) == null) {
+                queue.offer(root);
+                ans++;
+                continue;
+            }
+            if (root.left == null && root.right == null) {
+                return ans;
+            }
+            if (root.left != null) queue.offer(root.left);
+            if (root.right != null) queue.offer(root.right);
+        }
+        return ans;
     }
 }
 //leetcode submit region end(Prohibit modification and deletion)
 // 这递归速度有点慢，就算比最大深度复杂一点，数据规模大一点，耗时排名也不能这么低啊
 // 	执行耗时:8 ms,击败了61.08% 的Java用户
 //	内存消耗:61.3 MB,击败了93.80% 的Java用户
+// 看了官方题解，换成宽搜，果然速度提高了，不过内存消耗也上去了，队列是挺消耗内存
+// 	执行耗时:2 ms,击败了96.24% 的Java用户
+//	内存消耗:61.6 MB,击败了70.69% 的Java用户
