@@ -46,8 +46,6 @@ package main.leetcode.editor.cn;
 
 import main.customUtil.leetcode.TreeNode;
 
-import java.util.LinkedList;
-
 //leetcode submit region begin(Prohibit modification and deletion)
 
 
@@ -70,34 +68,6 @@ class Solution {
     public boolean hasPathSum(TreeNode root, int targetSum) {
         if (root == null) return false;
         if (root.left == null && root.right == null) return root.val == targetSum;
-        LinkedList<TreeNode> stack = new LinkedList<>();
-        stack.push(root);
-        targetSum -= stack.peek().val;
-        TreeNode last = null;
-        while (!stack.isEmpty()) {
-            root = stack.peek();
-            if (last != null) {
-                if (last == root.left && root.right != null) {
-                    last = null;
-                    stack.push(root.right);
-                    targetSum -= stack.peek().val;
-                } else {
-                    targetSum += stack.peek().val;
-                    last = stack.pop();
-                }
-                continue;
-            }
-            if (root.left != null) {
-                stack.push(root.left);
-                targetSum -= stack.peek().val;
-            } else if (root.right != null) {
-                stack.push(root.right);
-                targetSum -= stack.peek().val;
-            } else {
-                targetSum += stack.peek().val;
-                last = stack.pop();
-            }
-        }
         return hasPathSum(root.left, targetSum -= root.val) || hasPathSum(root.right, targetSum);
     }
 }
@@ -105,7 +75,4 @@ class Solution {
 // 数据规模不大，为什么还是占用了这么多空间呢？
 // 	执行耗时:0 ms,击败了100.00% 的Java用户
 //	内存消耗:42.1 MB,击败了51.83% 的Java用户
-// 看了官方题解，另有一种宽搜的解法，但是，宽搜的空间复杂度就更高了，如果手动压栈，相关的加减操作应该也是个不小的开销，但是可以节省空间。
-// 果然，手动处理效率太低
-// 	执行耗时:4 ms,击败了1.47% 的Java用户
-//	内存消耗:43.3 MB,击败了6.60% 的Java用户
+// 看了官方题解，另有一种宽搜的解法，但是，宽搜的空间复杂度就更高了，如果手动压栈，相关的加减操作应该也是个不小的开销。
