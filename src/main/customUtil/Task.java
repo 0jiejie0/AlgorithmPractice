@@ -1,6 +1,7 @@
 package main.customUtil;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.List;
 
 /**
@@ -84,7 +85,7 @@ public class Task {
      */
     public void runMethod(Method method, Object[] paramObjects, Object expectResultObject) throws Exception {
         System.out.print("\t测试样例 : \t");
-        System.out.println(Convert.toString(paramObjects) + " => " + Convert.toString(expectResultObject));
+        System.out.println(Convert.toString(paramObjects, new String[]{"", ""}) + " => " + Convert.toString(expectResultObject));
         System.out.print("\t样例用时(ms)：");
         System.out.println(invoke(method, paramObjects, expectResultObject));
     }
@@ -99,13 +100,25 @@ public class Task {
      * @throws Exception 方法对应类 实例化产生的异常
      */
     public long invoke(Method method, Object[] paramObjects, Object expectResultObject) throws Exception {
-        Object instance = method.getDeclaringClass().getDeclaredConstructor().newInstance();
+        Object instance;
+        if ("".equals(Modifier.toString(method.getDeclaringClass().getModifiers()))) {
+            // 默认控制修饰符表明，这个类的类名和文件名不一致（leetcode插件自动加载的文件，否则应该是public）
+            Class<?> transCls = Class.forName(method.getDeclaringClass().getPackage().getName() + ".Sentry");
+            Object ti = transCls.getDeclaredConstructor().newInstance();
+            instance = transCls.getDeclaredMethods()[0].invoke(ti, method);  // 借助同包的哨兵，获取其类实例
+        } else {
+            // 普通的public类
+            instance = method.getDeclaringClass().getDeclaredConstructor().newInstance();
+        }
+        method.setAccessible(true);
         long start = getTimeStamp();
         Object executeResult = method.invoke(instance, paramObjects);  // 为更准确反映真实运行时间，紧邻执行动作前后记录时间戳，不穿插其他动作
         long end = getTimeStamp();
         assert executeResult.equals(expectResultObject) : "\n" +
                 "期望值：\t" + Convert.toString(expectResultObject) + "\n" +
-                "实际值：\t" + Convert.toString(executeResult);
+                "实际值：\t" + Convert.toString(executeResult) + "\n" +
+                method.getDeclaringClass().getName() + "." + method.getName() + "(" + method.getDeclaringClass().getSimpleName() + ".java:100)";
+        // 最后这个是在日志中定位到错误文件位置，超过100行的定位到100行，没有的定位到文件开头
         return end - start;
     }
 }
