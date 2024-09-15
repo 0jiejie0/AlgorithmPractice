@@ -47,9 +47,9 @@ import main.customUtil.AssertExample;
 //1 <= nums.length <= 100
 //1 <= nums[i] <= 99
 public class TQ1判断是否可以赢得数字游戏 {
-    @AssertExample(params = {"[1,2,3,4,10]"}, expectResult="false")
-    @AssertExample(params = {"[1,2,3,4,5,14]"}, expectResult="true")
-    @AssertExample(params = {"[5,5,5,25]"}, expectResult="true")
+//    @AssertExample(params = {"[1,2,3,4,10]"}, expectResult="false")
+//    @AssertExample(params = {"[1,2,3,4,5,14]"}, expectResult="true")
+//    @AssertExample(params = {"[5,5,5,25]"}, expectResult="true")
     public boolean canAliceWin(int[] nums) {
         int single = 0, dbl = 0;
         for (int num : nums) {

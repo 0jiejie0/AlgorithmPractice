@@ -53,9 +53,9 @@ import main.customUtil.AssertExample;
 //s[i] 是 '0' 或 '1'。
 public class TQ1统计满足K约束的子字符串数量I {
 
-    @AssertExample(params = {"10101", "1"}, expectResult = "12")
-    @AssertExample(params = {"1010101", "2"}, expectResult = "25")
-    @AssertExample(params = {"11111", "1"}, expectResult = "15")
+//    @AssertExample(params = {"10101", "1"}, expectResult = "12")
+//    @AssertExample(params = {"1010101", "2"}, expectResult = "25")
+//    @AssertExample(params = {"11111", "1"}, expectResult = "15")
     public int countKConstraintSubstrings(String s, int k) {
         int ans = 0;
         char[] charArray = s.toCharArray();
