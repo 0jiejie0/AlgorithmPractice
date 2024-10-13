@@ -114,7 +114,7 @@ public class Task {
         long start = getTimeStamp();
         Object executeResult = method.invoke(instance, paramObjects);  // 为更准确反映真实运行时间，紧邻执行动作前后记录时间戳，不穿插其他动作
         long end = getTimeStamp();
-        assert executeResult.equals(expectResultObject) : "\n" +
+        assert Convert.toString(executeResult).equals(Convert.toString(expectResultObject)) : "\n" +
                 "期望值：\t" + Convert.toString(expectResultObject) + "\n" +
                 "实际值：\t" + Convert.toString(executeResult) + "\n" +
                 method.getDeclaringClass().getName() + "." + method.getName() + "(" + method.getDeclaringClass().getSimpleName() + ".java:100)";
