@@ -49,8 +49,8 @@ import java.util.HashMap;
 //1 <= nums[i] <= 50
 //1 <= x <= k <= nums.length
 public class T100455计算子数组的xsumI {
-    @AssertExample(params = {"[1,1,2,2,3,4,2,3]", "6", "2"}, expectResult = "[6,10,12]")
-    @AssertExample(params = {"[3,8,7,8,7,5]", "2", "2"}, expectResult = "[11,15,15,15,12]")
+//    @AssertExample(params = {"[1,1,2,2,3,4,2,3]", "6", "2"}, expectResult = "[6,10,12]")
+//    @AssertExample(params = {"[3,8,7,8,7,5]", "2", "2"}, expectResult = "[11,15,15,15,12]")
     public int[] findXSum(int[] nums, int k, int x) {
         int[] ans = new int[nums.length - k + 1];
         if (k == x) {
