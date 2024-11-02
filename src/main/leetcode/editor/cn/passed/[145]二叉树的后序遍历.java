@@ -40,8 +40,10 @@ package main.leetcode.editor.cn;//给你一棵二叉树的根节点 root ，返�
 
 import main.customUtil.leetcode.TreeNode;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Stack;
 
 //leetcode submit region begin(Prohibit modification and deletion)
 
@@ -89,8 +91,37 @@ class Solution {
         }
         return ansList;
     }
-}
-//leetcode submit region end(Prohibit modification and deletion)
 // 和上一题的先序遍历差不多，不同的是把入栈输出改为了出栈输出
 // 	执行耗时:0 ms,击败了100.00% 的Java用户
 //	内存消耗:40.5 MB,击败了90.43% 的Java用户
+
+
+    public List<Integer> postorderTraversal(TreeNode root) {
+        List<Integer> ansList = new ArrayList<>();
+        Stack<TreeNode> nodeStack = new Stack<>();
+        if (root == null) {
+            return ansList;
+        }
+        nodeStack.push(root);
+        while (!nodeStack.isEmpty()) {
+            root = nodeStack.peek();
+            if (root.left != null) {
+                nodeStack.push(root.left);
+                root.left = null;
+                continue;
+            }
+            if (root.right != null) {
+                nodeStack.push(root.right);
+                root.right = null;
+                continue;
+            }
+            ansList.add(root.val);
+            nodeStack.pop();
+        }
+        return ansList;
+    }
+// 	执行耗时:0 ms,击败了100.00% 的Java用户
+//	内存消耗:40.6 MB,击败了76.63% 的Java用户
+// 简单粗暴地写确实更快
+}
+//leetcode submit region end(Prohibit modification and deletion)
