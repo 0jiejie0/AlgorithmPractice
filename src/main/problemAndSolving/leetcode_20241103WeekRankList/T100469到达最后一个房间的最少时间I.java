@@ -55,15 +55,21 @@ import java.util.LinkedList;
 //2 <= m == moveTime[i].length <= 50
 //0 <= moveTime[i][j] <= 109
 public class T100469到达最后一个房间的最少时间I {
-    @AssertExample(params = {"[[0,4],[4,4]]"}, expectResult = "6")
-    @AssertExample(params = {"[[0,0,0],[0,0,0]]"}, expectResult = "3")
-    @AssertExample(params = {"[[0,1],[1,2]]"}, expectResult = "3")
+    long[][] temp;
+    HashSet<String> set;
+    LinkedList<String> queue;
+    int[][] moveTime;
+
+    //    @AssertExample(params = {"[[0,4],[4,4]]"}, expectResult = "6")
+//    @AssertExample(params = {"[[0,0,0],[0,0,0]]"}, expectResult = "3")
+//    @AssertExample(params = {"[[0,1],[1,2]]"}, expectResult = "3")
     public int minTimeToReach(int[][] moveTime) {
+        this.moveTime = moveTime;
         int m = moveTime.length, n = moveTime[0].length;
-        long[][] temp = new long[moveTime.length][moveTime[0].length];
+        temp = new long[moveTime.length][moveTime[0].length];
         temp[0][0] = 0;
-        HashSet<String> set = new HashSet<>();
-        LinkedList<String> queue = new LinkedList<>();
+        set = new HashSet<>();
+        queue = new LinkedList<>();
         queue.add("0,0");
         while (!queue.isEmpty()) {
             while (!queue.isEmpty()) {
@@ -72,70 +78,38 @@ public class T100469到达最后一个房间的最少时间I {
                 int j = Integer.parseInt(strings[1]);
                 long base = temp[i][j] + 1;
                 if (i + 1 < m) {
-                    long min = moveTime[i + 1][j] + 1;
-                    if (min < base) {
-                        min = base;
-                    }
-                    if (temp[i + 1][j] != 0) {
-                        if (temp[i + 1][j] > min) {
-                            temp[i + 1][j] = min;
-                            set.add(i + 1 + "," + j);
-                        }
-                    } else {
-                        temp[i + 1][j] = min;
-                        set.add(i + 1 + "," + j);
-                    }
+                    step(i + 1, j, base);
                 }
                 if (j + 1 < n) {
-                    long min = moveTime[i][j + 1] + 1;
-                    if (min < base) {
-                        min = base;
-                    }
-                    if (temp[i][j + 1] != 0) {
-                        if (temp[i][j + 1] > min) {
-                            temp[i][j + 1] = min;
-                            set.add(i + "," + (j + 1));
-                        }
-                    } else {
-                        temp[i][j + 1] = min;
-                        set.add(i + "," + (j + 1));
-                    }
+                    step(i, j + 1, base);
                 }
                 if (i - 1 >= 0) {
-                    long min = moveTime[i - 1][j] + 1;
-                    if (min < base) {
-                        min = base;
-                    }
-                    if (temp[i - 1][j] != 0) {
-                        if (temp[i - 1][j] > min) {
-                            temp[i - 1][j] = min;
-                            set.add(i - 1 + "," + j);
-                        }
-                    } else {
-                        temp[i - 1][j] = min;
-                        set.add(i - 1 + "," + j);
-                    }
+                    step(i - 1, j, base);
                 }
                 if (j - 1 >= 0) {
-                    long min = moveTime[i][j - 1] + 1;
-                    if (min < base) {
-                        min = base;
-                    }
-                    if (temp[i][j - 1] != 0) {
-                        if (temp[i][j - 1] > min) {
-                            temp[i][j - 1] = min;
-                            set.add(i + "," + (j - 1));
-                        }
-                    } else {
-                        temp[i][j - 1] = min;
-                        set.add(i + "," + (j - 1));
-                    }
+                    step(i, j - 1, base);
                 }
             }
             queue.addAll(set);
             set.clear();
         }
         return (int) temp[m - 1][n - 1];
+    }
+
+    private void step(int i, int j, long base) {
+        long min = moveTime[i][j] + 1;
+        if (min < base) {
+            min = base;
+        }
+        if (temp[i][j] != 0) {
+            if (temp[i][j] > min) {
+                temp[i][j] = min;
+                set.add(i + "," + j);
+            }
+        } else {
+            temp[i][j] = min;
+            set.add(i + "," + j);
+        }
     }
 }
 /*
@@ -146,4 +120,6 @@ public class T100469到达最后一个房间的最少时间I {
 4. 边界判定疏忽，增加分析时间
 
 总而言之，不熟，练得太少，太少！
+
+重复代码抽出来，看着顺眼多了，但是感觉数据结构还是有点别扭，感觉有优化空间，不过一时间想不出了
  */
