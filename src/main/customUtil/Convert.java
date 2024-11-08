@@ -390,6 +390,14 @@ public class Convert {
         if (null == o) {
             return 0;
         }
-        return Integer.parseInt(toString(o));
+        String s = toString(o);
+        if (s.contains("0b")) {
+            return Integer.parseInt(s.substring(2), 2);
+        } else if (s.charAt(0) == '0') {
+            return Integer.parseInt(s.substring(1), 8);
+        } else if (s.contains("0x")) {
+            return Integer.parseInt(s.substring(2), 16);
+        }
+        return Integer.parseInt(s);
     }
 }
