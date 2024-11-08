@@ -1,6 +1,5 @@
 package main.customUtil;
 
-import java.lang.reflect.Array;
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -101,23 +100,99 @@ public class Convert {
     public static Object toArray(Class<?> elementType, Object o, String[] surrounds, String delimiter) {
         List<?> list = toList(elementType, o, surrounds, delimiter);// 如果直接将List转成数组，泛型信息会丢失，这里需要二次处理
         if (int.class.equals(elementType)) {
-            return toIntArray(list);  // 基本数据类型数组需要单独处理
+            return toIntCompoundArray(elementType, list);  // 基本数据类型数组需要单独处理
         } else if (Integer.class.equals(elementType)) {
             return list.toArray(new Integer[0]);
         } else if (String.class.equals(elementType)) {
             return list.toArray(new String[0]);
+        } else if (elementType.isArray()) {
+            Class<?> type = elementType;
+            while (type.isArray()) {
+                type = type.getComponentType();
+            }
+            if (int.class.equals(type)) {
+                return toIntCompoundArray(elementType, list);
+            }
         }
         return new Object[]{};
     }
 
     /**
-     * 将List列表转换为int数组
+     * 将List列表转换为int多维数组
      *
      * @param list
      * @return
      */
-    public static int[] toIntArray(List<?> list) {
-        int[] ansArray = (int[]) Array.newInstance(int.class, list.size());
+    public static Object toIntCompoundArray(Class<?> elementType, List<?> list) {
+        if (elementType.isArray()) {
+            elementType = elementType.getComponentType();
+            if (elementType.isArray()) {
+                elementType = elementType.getComponentType();
+                if (elementType.isArray()) {
+                    elementType = elementType.getComponentType();
+                    if (elementType.isArray()) {
+                        elementType = elementType.getComponentType();
+                        if (elementType.isArray()) {
+                            elementType = elementType.getComponentType();
+                            if (elementType.isArray()) {
+                                elementType = elementType.getComponentType();
+                                if (elementType.isArray()) {
+                                    elementType = elementType.getComponentType();
+                                    if (elementType.isArray()) {
+                                        elementType = elementType.getComponentType();
+                                        if (elementType.isArray()) {
+                                            throw new RuntimeException("这tmd代码肯定有问题，哪有维数这么高的数组？再检查检查吧！" +
+                                                    "整不明白就下一题吧还是，这个Java也是真废，搞什么运行时编译时信息擦除不知道脑子怎么想的");
+                                        }
+                                        int[][][][][][][][][] ansArray = new int[list.size()][][][][][][][][];
+                                        for (int i = 0; i < list.size(); i++) {
+                                            ansArray[i] = (int[][][][][][][][]) list.get(i);
+                                        }
+                                        return ansArray;
+                                    }
+                                    int[][][][][][][][] ansArray = new int[list.size()][][][][][][][];
+                                    for (int i = 0; i < list.size(); i++) {
+                                        ansArray[i] = (int[][][][][][][]) list.get(i);
+                                    }
+                                    return ansArray;
+                                }
+                                int[][][][][][][] ansArray = new int[list.size()][][][][][][];
+                                for (int i = 0; i < list.size(); i++) {
+                                    ansArray[i] = (int[][][][][][]) list.get(i);
+                                }
+                                return ansArray;
+                            }
+                            int[][][][][][] ansArray = new int[list.size()][][][][][];
+                            for (int i = 0; i < list.size(); i++) {
+                                ansArray[i] = (int[][][][][]) list.get(i);
+                            }
+                            return ansArray;
+                        }
+                        int[][][][][] ansArray = new int[list.size()][][][][];
+                        for (int i = 0; i < list.size(); i++) {
+                            ansArray[i] = (int[][][][]) list.get(i);
+                        }
+                        return ansArray;
+                    }
+                    int[][][][] ansArray = new int[list.size()][][][];
+                    for (int i = 0; i < list.size(); i++) {
+                        ansArray[i] = (int[][][]) list.get(i);
+                    }
+                    return ansArray;
+                }
+                int[][][] ansArray = new int[list.size()][][];
+                for (int i = 0; i < list.size(); i++) {
+                    ansArray[i] = (int[][]) list.get(i);
+                }
+                return ansArray;
+            }
+            int[][] ansArray = new int[list.size()][];
+            for (int i = 0; i < list.size(); i++) {
+                ansArray[i] = (int[]) list.get(i);
+            }
+            return ansArray;
+        }
+        int[] ansArray = new int[list.size()];
         for (int i = 0; i < list.size(); i++) {
             ansArray[i] = toInteger(list.get(i));
         }
@@ -149,22 +224,34 @@ public class Convert {
         if (null == o) {
             return ansObjectList;
         }
-        if (null == delimiter) {
-            delimiter = ",";  // 分隔符默认不带空格
-        }
         if (null == surrounds || surrounds.length < 2) {
             surrounds = new String[]{"[", "]"};
         }
-        String dataString = toString(o);
+        String dataString = toString(o).trim();
         if (0 == dataString.indexOf(surrounds[0])) {  // 剔除前缀
             dataString = dataString.substring(surrounds[0].length());
         }
-        if (dataString.length() - surrounds[1].length() == dataString.indexOf(surrounds[1])) {  // 剔除后缀（列表内元素及分隔符不包含后缀的情况下，否则有bug）
+        if (dataString.substring(dataString.length() - surrounds[1].length(), dataString.length()).equals(surrounds[1])) {  // 字符串剔除末尾后缀
             dataString = dataString.substring(0, dataString.length() - surrounds[1].length());
         }
-        String[] dataStrings = dataString.split(delimiter);
-        for (String dataStr : dataStrings) {
-            ansObjectList.add(toInstance(elementType, dataStr));
+        if (null == delimiter) {
+            delimiter = ",";  // 分隔符默认不带空格
+        }
+        String elementPrefix = surrounds[0];  // 兼容多维数组，确定元素括号前缀
+        while (dataString.contains(elementPrefix)) {
+            elementPrefix += surrounds[0];
+        }
+        elementPrefix = elementPrefix.substring(0, elementPrefix.length() - surrounds[0].length());
+        while (dataString.length() > 0) {
+            int i = dataString.indexOf(delimiter + elementPrefix);  // 元素分隔符的下标，1.加入元素前缀防止元素内容干扰分割 2.拼接分隔符，防止非数组元素 前缀空串情况下的可能问题
+            if (i < 0) {  // 无分隔符，仅剩一个元素
+                ansObjectList.add(toInstance(elementType, dataString));
+                break;
+            }
+            // 截取首个元素，转化并添加到结果列表中
+            ansObjectList.add(toInstance(elementType, dataString.substring(0, i)));
+            // 循环处理剩余元素
+            dataString = dataString.substring(i + delimiter.length());
         }
         return ansObjectList;
     }
@@ -204,7 +291,12 @@ public class Convert {
         }
         if (Class.class.equals(o.getClass())) {
             Class<?> oClass = (Class<?>) o;
-            return oClass.isArray() ? oClass.getComponentType().getName() + "[]" : oClass.getName();  // 数组类型使用元素类型加方括号表示
+            String a = "";
+            while (oClass.isArray()) {
+                a += "[]";  // 数组类型使用元素类型加方括号表示
+                oClass = oClass.getComponentType();
+            }
+            return oClass.getName() + a;
         } else if (String.class.equals(o.getClass())) {
             return o.toString();
         } else if (o.getClass().isArray()) {
@@ -247,8 +339,8 @@ public class Convert {
             return toObjectArrayString(Arrays.stream((Object[]) o), surrounds, joinDelimiter);
         } else if (int.class.equals(o.getClass().getComponentType())) {
             return toIntArrayString(((int[]) o), surrounds, joinDelimiter);
-        }
-        return String.valueOf(o) + "-ArrStr";
+        } // 多维数组的数据输出直接输出参数原字符串，不再用代码特别处理
+        return String.valueOf(o) + "-ArrStr";  // 表明上方没有区分全部情况
     }
 
     /**

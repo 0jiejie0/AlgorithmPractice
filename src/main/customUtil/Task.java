@@ -72,7 +72,7 @@ public class Task {
     public void runMethod(Method method, String[] params, String expectResult) throws Exception {
         Object[] paramObjects = Convert.toInstances(method.getParameterTypes(), params);
         Object expectResultObject = Convert.toInstance(method.getReturnType(), expectResult);
-        runMethod(method, paramObjects, expectResultObject);
+        runMethod(method, paramObjects, params, expectResultObject);
     }
 
     /**
@@ -83,9 +83,9 @@ public class Task {
      * @param expectResultObject 期望结果对象
      * @throws Exception 调用方法 内部抛出的异常
      */
-    public void runMethod(Method method, Object[] paramObjects, Object expectResultObject) throws Exception {
+    public void runMethod(Method method, Object[] paramObjects, String[] paramStrings, Object expectResultObject) throws Exception {
         System.out.print("\t测试样例 : \t");
-        System.out.println(Convert.toString(paramObjects, new String[]{"", ""}) + " => " + Convert.toString(expectResultObject));
+        System.out.println(Convert.toString(paramStrings, new String[]{"", ""}) + " => " + Convert.toString(expectResultObject));
         System.out.print("\t样例用时(ms)：");
         System.out.println(invoke(method, paramObjects, expectResultObject));
     }
