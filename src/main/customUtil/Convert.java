@@ -55,12 +55,13 @@ public class Convert {
         } else if (boolean.class.equals(typeClass) || Boolean.class.equals(typeClass)) {
             ans = toBoolean(param);
         } else if (String.class.equals(typeClass)) {
-            ans = toString(param);
+            ans = param;
         } else if (typeClass.isArray()) {
             ans = toArray(typeClass.getComponentType(), param);
         } else if (List.class.isAssignableFrom(typeClass)) {
-            Class<?> actualTypeArgument = (Class<?>) ((ParameterizedType) typeClass.getGenericSuperclass()).getActualTypeArguments()[0];
-            ans = toList(actualTypeArgument, param);
+//            Class<?> actualTypeArgument = (Class<?>) ((ParameterizedType) typeClass.getGenericSuperclass()).getActualTypeArguments()[0];
+//            ans = toList(actualTypeArgument, param);
+            ans = toList(Integer.class, param);  // 临时先用Integer顶一阵吧，实在是拿不到泛型
         }
         return ans;
     }
@@ -99,18 +100,19 @@ public class Convert {
      */
     public static Object toArray(Class<?> elementType, Object o, String[] surrounds, String delimiter) {
         List<?> list = toList(elementType, o, surrounds, delimiter);// 如果直接将List转成数组，泛型信息会丢失，这里需要二次处理
-        if (int.class.equals(elementType)) {
-            return toIntCompoundArray(elementType, list);  // 基本数据类型数组需要单独处理
-        } else if (Integer.class.equals(elementType)) {
+        if (Integer.class.equals(elementType)) {
             return list.toArray(new Integer[0]);
         } else if (String.class.equals(elementType)) {
             return list.toArray(new String[0]);
-        } else if (elementType.isArray()) {
+        } else {
+            // 多维数组
             Class<?> type = elementType;
             while (type.isArray()) {
                 type = type.getComponentType();
             }
+            // 多维int数组，方法内一次性完成转化
             if (int.class.equals(type)) {
+                // 基本数据类型数组需要手动处理
                 return toIntCompoundArray(elementType, list);
             }
         }
@@ -227,6 +229,7 @@ public class Convert {
         if (null == surrounds || surrounds.length < 2) {
             surrounds = new String[]{"[", "]"};
         }
+        // 前后缀
         String dataString = toString(o).trim();
         if (0 == dataString.indexOf(surrounds[0])) {  // 剔除前缀
             dataString = dataString.substring(surrounds[0].length());
@@ -234,6 +237,7 @@ public class Convert {
         if (dataString.substring(dataString.length() - surrounds[1].length(), dataString.length()).equals(surrounds[1])) {  // 字符串剔除末尾后缀
             dataString = dataString.substring(0, dataString.length() - surrounds[1].length());
         }
+        // 子元素前缀
         if (null == delimiter) {
             delimiter = ",";  // 分隔符默认不带空格
         }
@@ -242,13 +246,14 @@ public class Convert {
             elementPrefix += surrounds[0];
         }
         elementPrefix = elementPrefix.substring(0, elementPrefix.length() - surrounds[0].length());
+        // 分割、转化
         while (dataString.length() > 0) {
             int i = dataString.indexOf(delimiter + elementPrefix);  // 元素分隔符的下标，1.加入元素前缀防止元素内容干扰分割 2.拼接分隔符，防止非数组元素 前缀空串情况下的可能问题
             if (i < 0) {  // 无分隔符，仅剩一个元素
                 ansObjectList.add(toInstance(elementType, dataString));
                 break;
             }
-            // 截取首个元素，转化并添加到结果列表中
+            // 截取首个元素，递归转化并添加到结果列表中
             ansObjectList.add(toInstance(elementType, dataString.substring(0, i)));
             // 循环处理剩余元素
             dataString = dataString.substring(i + delimiter.length());
@@ -283,13 +288,14 @@ public class Convert {
      * @param o             要获取字符串的对象
      * @param surrounds     列表、数组类型要加注的前后缀
      * @param joinDelimiter 列表、数组类型元素间的分隔符
-     * @return 未能识别类型的对象，返回String.valueOf(o)值
+     * @return 未能识别类型的对象，返回o.toString()值
      */
     public static String toString(Object o, String[] surrounds, String joinDelimiter) {
         if (null == o) {
             return "";
         }
         if (Class.class.equals(o.getClass())) {
+            // 将参数类型列表转换为字符串
             Class<?> oClass = (Class<?>) o;
             String a = "";
             while (oClass.isArray()) {
@@ -297,14 +303,13 @@ public class Convert {
                 oClass = oClass.getComponentType();
             }
             return oClass.getName() + a;
-        } else if (String.class.equals(o.getClass())) {
-            return o.toString();
         } else if (o.getClass().isArray()) {
             return toArrayString(o, surrounds, joinDelimiter);
         } else if (o instanceof List) {
-            return toString(((List<?>) o).toArray(), surrounds, joinDelimiter);  // List对象转为Object数组
+            return toString(((List<?>) o).toArray(), surrounds, joinDelimiter);  // List对象转为数组，复用数组处理逻辑
+        } else {
+            return o.toString();
         }
-        return String.valueOf(o);
     }
 
     /**
@@ -329,42 +334,44 @@ public class Convert {
             surrounds = new String[]{"[", "]"};
         }
         // 各类型数组分别(数组类型不同无法直接向父类强转)强制类型转换，调用Stream方式处理
+        String arrayString;
         if (Class.class.equals(o.getClass().getComponentType())) {
-            return toObjectArrayString(Arrays.stream((Class[]) o), surrounds, joinDelimiter);
+            arrayString = toObjectArrayString((Class[]) o, joinDelimiter);
         } else if (Integer.class.equals(o.getClass().getComponentType())) {
-            return toObjectArrayString(Arrays.stream((Integer[]) o), surrounds, joinDelimiter);
+            arrayString = toObjectArrayString((Integer[]) o, joinDelimiter);
         } else if (String.class.equals(o.getClass().getComponentType())) {
-            return toObjectArrayString(Arrays.stream((String[]) o), surrounds, joinDelimiter);
+            arrayString = toObjectArrayString((String[]) o, joinDelimiter);
         } else if (Object.class.equals(o.getClass().getComponentType())) {
-            return toObjectArrayString(Arrays.stream((Object[]) o), surrounds, joinDelimiter);
+            arrayString = toObjectArrayString((Object[]) o, joinDelimiter);
         } else if (int.class.equals(o.getClass().getComponentType())) {
-            return toIntArrayString(((int[]) o), surrounds, joinDelimiter);
-        } // 多维数组的数据输出直接输出参数原字符串，不再用代码特别处理
-        return String.valueOf(o) + "-ArrStr";  // 表明上方没有区分全部情况
+            arrayString = toIntArrayString(((int[]) o), joinDelimiter);
+        } else {
+            // 1. 多维数组的数据输出直接输出参数原字符串，不再用代码特别处理
+            return o.toString() + "-ArrStr";  // 2. 表明上方没有区分全部情况
+        }
+        return surrounds[0] + arrayString + surrounds[1];
     }
 
     /**
      * 将int数组转换为字符串
      *
      * @param array         int数组
-     * @param surrounds     前后缀（括号）
      * @param joinDelimiter 分隔符（逗号）
      * @return
      */
-    private static String toIntArrayString(int[] array, String[] surrounds, String joinDelimiter) {
-        return surrounds[0] + String.join(joinDelimiter, Arrays.stream(array).mapToObj(Convert::toString).toArray(String[]::new)) + surrounds[1];
+    private static String toIntArrayString(int[] array, String joinDelimiter) {
+        return String.join(joinDelimiter, Arrays.stream(array).mapToObj(Convert::toString).toArray(String[]::new));
     }
 
     /**
-     * 将stream流中的元素组装为字符串
+     * 将stream流中的元素组装为字符串(泛型方法)
      *
-     * @param stream        包装类型数组的流序列
-     * @param surrounds     前后缀（括号）
+     * @param array         包装类型数组
      * @param joinDelimiter 分隔符（逗号）
      * @return
      */
-    private static String toObjectArrayString(Stream<?> stream, String[] surrounds, String joinDelimiter) {
-        return surrounds[0] + stream.map(Convert::toString).collect(Collectors.joining(joinDelimiter)) + surrounds[1];
+    private static <T> String toObjectArrayString(T[] array, String joinDelimiter) {
+        return Arrays.stream(array).map(Convert::toString).collect(Collectors.joining(joinDelimiter));
     }
 
     /**
@@ -391,11 +398,11 @@ public class Convert {
             return 0;
         }
         String s = toString(o);
-        if (s.contains("0b")) {
+        if (s.contains("0b")) {  // 二进制
             return Integer.parseInt(s.substring(2), 2);
-        } else if (s.contains("0x")) {
+        } else if (s.contains("0x")) {  // 十六进制
             return Integer.parseInt(s.substring(2), 16);
-        } else if (s.charAt(0) == '0') {
+        } else if (s.length() > 1 && s.charAt(0) == '0') {  // 0开头，八进制
             return Integer.parseInt(s.substring(1), 8);
         }
         return Integer.parseInt(s);
