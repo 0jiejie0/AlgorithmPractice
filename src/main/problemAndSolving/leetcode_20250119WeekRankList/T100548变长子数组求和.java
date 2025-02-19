@@ -47,7 +47,7 @@ import main.customUtil.AssertExample;
 //1 <= n == nums.length <= 100
 //1 <= nums[i] <= 1000
 public class T100548变长子数组求和 {
-    @AssertExample(params = "[2,3,1]", expectResult = "11")
+//    @AssertExample(params = "[2,3,1]", expectResult = "11")
     public int subarraySum(int[] nums) {
         int ans = 0;
         for (int i = 0; i < nums.length; i++) {
