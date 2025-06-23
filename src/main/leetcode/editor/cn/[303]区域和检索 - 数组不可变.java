@@ -47,18 +47,29 @@ package main.leetcode.editor.cn;//给定一个整数数组 nums，处理以下�
 //leetcode submit region begin(Prohibit modification and deletion)
 class NumArray {
     long[] cache;
+    int[] nums;
 
     public NumArray(int[] nums) {
+        this.nums = nums;
         cache = new long[nums.length];
         for (int i = 0; i < nums.length; i++) {
-            for (int j = 0; j <= i; j++) {
-                cache[j] += nums[i];
-            }
+            cache[i] = Long.MIN_VALUE;
         }
+        cache[0] = nums[0];
     }
 
     public int sumRange(int left, int right) {
-        return (int) (right == cache.length - 1 ? cache[left] : (cache[left] - cache[right + 1]));
+        long l = cache[0];
+        int i = 0;
+        while (i < cache.length && cache[i] != Long.MIN_VALUE) {
+            l = cache[i++];
+        }
+        for (; cache[right] == Long.MIN_VALUE; i++) {
+            if (cache[i] == Long.MIN_VALUE) {
+                cache[i] = l += nums[i];
+            }
+        }
+        return (int) (left == 0 ? cache[right] : (cache[right] - cache[left - 1]));
     }
 }
 
@@ -75,3 +86,6 @@ class NumArray {
 // 这个效率有点低啊？
 // 数据预处理效率确实太慢，平方复杂度，怎么优化呢？
 
+// 	执行耗时:72 ms,击败了5.19% 的Java用户
+//	内存消耗:48.6 MB,击败了7.31% 的Java用户
+// 纯纯负优化，每次查询时初始化一部分并没有提升性能，反而浪费了时间用来判断
