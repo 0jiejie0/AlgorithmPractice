@@ -57,7 +57,7 @@ class Solution {
     public int[] countBits(int n) {
         int[] ans = new int[n + 1];
         for (int i = 1; i <= n; i++) {
-            ans[i] = ans[i >> 1] + (i & 1);
+            ans[i] = 1 + ans[i & (i - 1)];
         }
         return ans;
     }
@@ -78,3 +78,8 @@ class Solution {
 // 最低有效位，官方真正的最低位，这个运算数量相当少了，按理说很快才是，但是？
 // 	执行耗时:1 ms,击败了99.51% 的Java用户
 //	内存消耗:48 MB,击败了5.09% 的Java用户
+
+// 最低设置位，之前的写法没有充分整合条件，还是不够熟练
+//	执行耗时:1 ms,击败了99.51% 的Java用户
+//	内存消耗:47.7 MB,击败了39.45% 的Java用户
+// 空间效率总算提上来了一点
