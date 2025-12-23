@@ -56,12 +56,12 @@
 class Solution {
     public int[] countBits(int n) {
         int[] ans = new int[n + 1];
-        int h = 0;
         for (int i = 1; i <= n; i++) {
-            if (0 == (i & (i - 1))) {
-                h = i;
+            if (1 == (i & 1)) {
+                ans[i] = 1 + ans[i - 1];
+            } else {
+                ans[i] = 1 + ans[i & (i - 1)];
             }
-            ans[i] = 1 + ans[i - h];
         }
         return ans;
     }
@@ -76,4 +76,7 @@ class Solution {
 // 最高有效位
 //	    执行耗时:1 ms,击败了99.51% 的Java用户
 //      内存消耗:48 MB,击败了5.90% 的Java用户
+// 最低有效位，受最高位启发独立完成
+// 	执行耗时:1 ms,击败了99.51% 的Java用户
+//	内存消耗:48 MB,击败了6.79% 的Java用户
 
