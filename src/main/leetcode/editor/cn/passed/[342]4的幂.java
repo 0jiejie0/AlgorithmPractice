@@ -48,7 +48,7 @@ class Solution {
 //    @AssertExample(params = "1", expectResult = "true")
 //    @AssertExample(params = "4", expectResult = "true")
     public boolean isPowerOfFour(int n) {
-        return n > 0 && (0 == (n &(n-1))) && 0 == (n&0x2aaa_aaaa);
+        return (0 == (n & (n - 1))) && 1 == (n % 3);
     }
 }
 //leetcode submit region end(Prohibit modification and deletion)
@@ -60,4 +60,6 @@ class Solution {
 // 	执行耗时:0 ms,击败了100.00% 的Java用户
 //	内存消耗:42 MB,击败了12.81% 的Java用户
 
-
+// 取模性质
+//	执行耗时:0 ms,击败了100.00% 的Java用户
+//	内存消耗:41.8 MB,击败了34.91% 的Java用户
