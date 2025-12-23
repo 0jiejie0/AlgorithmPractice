@@ -48,16 +48,16 @@ class Solution {
 //    @AssertExample(params = "1", expectResult = "true")
 //    @AssertExample(params = "4", expectResult = "true")
     public boolean isPowerOfFour(int n) {
-        int c = n - 1, t = c;
-        c = (0x5555_5555 & c) + (0x5555_5555 & (c >> 1));
-        c = (0x3333_3333 & c) + (0x3333_3333 & (c >> 2));
-        c = (0x0f0f_0f0f & c) + (0x0f0f_0f0f & (c >> 4));
-        c = (0x00ff_00ff & c) + (0x00ff_00ff & (c >> 8));
-        c = (0x0000_ffff & c) + (0x0000_ffff & (c >> 16));
-        return n > 0 && (n == 1 || (0 == (t & n) && 0 == (c & 1)));
+        return n > 0 && (0 == (n &(n-1))) && 0 == (n&0x2aaa_aaaa);
     }
 }
 //leetcode submit region end(Prohibit modification and deletion)
 
 // 	执行耗时:0 ms,击败了100.00% 的Java用户
 //	内存消耗:42.1 MB,击败了5.03% 的Java用户
+
+// 2进制中1的位置
+// 	执行耗时:0 ms,击败了100.00% 的Java用户
+//	内存消耗:42 MB,击败了12.81% 的Java用户
+
+
