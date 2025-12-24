@@ -58,8 +58,7 @@ class Solution {
     }
 
     private static boolean needRvs(char c) {
-        return c == 'a' || c == 'A' || c == 'e' || c == 'E' || c == 'i' || c == 'I' ||
-                c == 'o' || c == 'O' || c == 'u' || c == 'U';
+        return "aeiouAEIOU".indexOf(c) >= 0;
     }
 }
 //leetcode submit region end(Prohibit modification and deletion)
@@ -67,3 +66,7 @@ class Solution {
 // 	执行耗时:2 ms,击败了99.37% 的Java用户
 //	内存消耗:45.6 MB,击败了51.22% 的Java用户
 // 效率一般
+
+// 	执行耗时:3 ms,击败了85.93% 的Java用户
+//	内存消耗:45.7 MB,击败了47.72% 的Java用户
+// 官方题解的判元效率不高啊
