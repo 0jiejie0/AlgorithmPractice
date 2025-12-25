@@ -29,32 +29,32 @@
 // Related Topics 数组 哈希表 双指针 二分查找 排序 👍 1008 👎 0
 
 
+import java.util.Arrays;
+import java.util.HashSet;
+
 //leetcode submit region begin(Prohibit modification and deletion)
 class Solution {
     public int[] intersection(int[] nums1, int[] nums2) {
-        int c = 1001;
-        int[] cache = new int[c];
+        HashSet<Integer> set = new HashSet<>();
         int n = 0;
+        int[] ans;
+        if (nums1.length < nums2.length) {
+            ans = nums1;
+            nums1 = nums2;
+            nums2 = ans;
+        }
+        ans = new int[nums2.length];
         for (int i = 0; i < nums1.length; i++) {
-            cache[nums1[i]] = 1;
+            set.add(nums1[i]);
         }
         for (int i = 0; i < nums2.length; i++) {
-            int i1 = nums2[i];
-            if (cache[i1] > 0) {
-                cache[i1]++;
-                if (cache[i1] == 2) {
-                    n++;
-                }
+            int j = nums2[i];
+            if (set.contains(j)) {
+                set.remove(j);
+                ans[n++] = j;
             }
         }
-        int[] ans = new int[n];
-        int j = 0;
-        for (int i = 0; i < c; i++) {
-            if (cache[i] > 1) {
-                ans[j++] = i;
-            }
-        }
-        return ans;
+        return Arrays.copyOf(ans, n);
     }
 }
 //leetcode submit region end(Prohibit modification and deletion)
@@ -62,3 +62,6 @@ class Solution {
 // 	执行耗时:2 ms,击败了90.24% 的Java用户
 //	内存消耗:44 MB,击败了49.28% 的Java用户
 // 如果用集合，效率不见得会更高
+// 	执行耗时:3 ms,击败了60.70% 的Java用户
+//	内存消耗:44.4 MB,击败了13.64% 的Java用户
+// 果然效率不高
